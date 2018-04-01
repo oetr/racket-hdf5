@@ -1,0 +1,4 @@
+FFI bindings to the hdf5 library.
+- link hdf5 library
+- installation instructions
+- quickstart guide
