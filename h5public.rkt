@@ -2,7 +2,8 @@
 ;; Racket Foreign interface
 (require ffi/unsafe
          ffi/unsafe/define
-         ffi/winapi)
+         ffi/winapi
+         rackunit)
 
 (define hdf5-lib (ffi-lib "libhdf5_serial"))
 
@@ -12,7 +13,7 @@
   (syntax-rules ()
     [(_ name body)
      (begin
-       ;;(provide name)
+       (provide name)
        (define-hdf5-lib-internal name body))]))
 
 (define _herr_t _int)
@@ -114,10 +115,3 @@
 
 (H5open)
 (H5close)
-
-
-(define-hdf5 H5resize_memory
-  (_fun (mem : _pointer)
-        (size : _size)
-        -> _pointer))
-

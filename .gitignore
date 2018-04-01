@@ -3,5 +3,8 @@
 !HDF5-LICENSE
 !LICENSE
 
+# documentation
+!*.org
 
+# source code
 !*.rkt
