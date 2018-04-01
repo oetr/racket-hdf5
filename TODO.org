@@ -1,2 +1,3 @@
 * Add a racketify macro (convert "_" into "-")
 * Add and test modules one by one
+* Pre-make result buffers for each function that needs those

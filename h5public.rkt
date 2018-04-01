@@ -17,9 +17,8 @@
        (provide name)
        (define-hdf5-lib-internal name body))]))
 
-
-(define hsize_t _ulong)
-(define hssize_t _long)
+(define+provide hsize_t _ulong)
+(define+provide hssize_t _long)
 
 #|
  * Status return values.  Failed integer functions in HDF5 result almost
@@ -31,7 +30,7 @@
  * 	if((dset = H5Dopen2(file, name)) < 0)
  *	    fprintf(stderr, "unable to open the requested dataset\n");
 |#
-(define herr_t _int)
+(define+provide herr_t _int)
 
 
 #|
@@ -49,8 +48,8 @@
  * 	    printf("error determining whether data type is committed\n");
  *	}
 |#
-(define hbool_t _uint)
-(define htri_t _int)
+(define+provide hbool_t _uint)
+(define+provide htri_t _int)
 
 
 ;; Common iteration orders
@@ -66,9 +65,9 @@
 #| (Actually, any postive value will cause the iterator to stop and pass back
  *      that positive value to the function that called the iterator)
  |#
-(define H5_ITER_ERROR -1)
-(define H5_ITER_CONT   0)
-(define H5_ITER_STOP   1)
+(define+provide H5_ITER_ERROR -1)
+(define+provide H5_ITER_CONT   0)
+(define+provide H5_ITER_STOP   1)
 
 
 
@@ -141,7 +140,6 @@
         -> (status : herr_t)
         -> (list majnum minnum relnum)))
 
-(H5get_libversion)
 
 (define-hdf5 H5check_version
   (_fun (majnum : _uint)
@@ -151,9 +149,6 @@
         -> (unless (zero? status)
              (error 'H5check_version "incompatible versions"))))
 
-(H5check_version 1 2 3)
-
-
 
 (define-hdf5 H5is_library_threadsafe
   (_fun () ::
@@ -161,7 +156,7 @@
         -> (status : herr_t)
         -> (= is_ts 1)))
 
-(H5is_library_threadsafe)
+
 
 (define-hdf5 H5allocate_memory
   (_fun (size clear) ::
@@ -174,21 +169,23 @@
                  (printf "WARNING: H5allocate_memory allocated a NULL\n")
                  mem))))
 
-(H5allocate_memory 10 #t)
-(H5allocate_memory 0 #t)
-
 (define-hdf5 H5free_memory
   (_fun (mem : _pointer)
         -> (status : herr_t)
         -> (when (< status 0)
              (error 'H5free_memory "unable to free memory"))))
 
-(H5free_memory (H5allocate_memory 10 #t))
-
 (define-hdf5 H5resize_memory
   (_fun (mem : _pointer)
         (size : _size)
         -> _pointer))
 
-(H5open)
-(H5close)
+(module+ test
+  (H5get_libversion)
+  (H5check_version 1 2 3)
+  (H5is_library_threadsafe)
+  (H5allocate_memory 10 #t)
+  (H5allocate_memory 0 #t)
+  (H5free_memory (H5allocate_memory 10 #t))
+  (H5open)
+  (H5close))

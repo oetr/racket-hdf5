@@ -27,5 +27,4 @@
            H5I_NTYPES)))   ;; number of library types, MUST BE LAST!
 
 ;; Type of atoms to return to users
-(define hid_t _int)
-(define H5_SIZEOF_HID_T         H5_SIZEOF_INT)
+(define+provide hid_t _int)
