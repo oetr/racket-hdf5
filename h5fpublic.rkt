@@ -225,21 +225,48 @@
         (buf_len : _size)
         -> _ssize))
 
+(define-hdf5 H5Fget_mdc_config
+  (_fun (file_id : hid_t)
+        (config_ptr : _H5AC_cache_config_t-pointer/null)
+        -> herr_t))
 
-;; H5_DLL herr_t H5Fget_mdc_config(hid_t file_id,
-;; 				H5AC_cache_config_t * config_ptr);
-;; H5_DLL herr_t H5Fset_mdc_config(hid_t file_id,
-;; 				H5AC_cache_config_t * config_ptr);
-;; H5_DLL herr_t H5Fget_mdc_hit_rate(hid_t file_id, double * hit_rate_ptr);
-;; H5_DLL herr_t H5Fget_mdc_size(hid_t file_id,
-;;                               size_t * max_size_ptr,
-;;                               size_t * min_clean_size_ptr,
-;;                               size_t * cur_size_ptr,
-;;                               int * cur_num_entries_ptr);
-;; H5_DLL herr_t H5Freset_mdc_hit_rate_stats(hid_t file_id);
-;; H5_DLL ssize_t H5Fget_name(hid_t obj_id, char *name, size_t size);
-;; H5_DLL herr_t H5Fget_info(hid_t obj_id, H5F_info_t *bh_info);
-;; H5_DLL herr_t H5Fclear_elink_file_cache(hid_t file_id);
+(define-hdf5 H5Fset_mdc_config
+  (_fun (file_id : hid_t)
+        (config_ptr : _H5AC_cache_config_t-pointer/null)
+        -> herr_t))
+
+(define-hdf5 H5Fget_mdc_hit_rate
+  (_fun (file_id : hid_t)
+        (hit_date_ptr : _pointer)
+        -> herr_t))
+
+(define-hdf5 H5Fget_mdc_size
+  (_fun (file_id : hid_t)
+        (max_size_ptr : _pointer)
+        (min_clean_size_ptr : _pointer)
+        (cur_size_ptr : _pointer)
+        (cur_num_entries_ptr : _pointer)
+        -> herr_t))
+
+(define-hdf5 H5Freset_mdc_hit_rate_stats
+  (_fun (file_id : hid_t)
+        -> herr_t))
+
+(define-hdf5 H5Fget_name
+  (_fun (obj_id : hid_t)
+        (name : _string)
+        (size : _size)
+        -> _ssize))
+
+(define-hdf5 H5Fget_info
+  (_fun (obj_id : hid_t)
+        (bh_info : _H5F_info_t-pointer/null)
+        -> herr_t))
+
+(define-hdf5 H5Fclear_elink_file_cache
+  (_fun (file_id : hid_t)
+        -> herr_t))
+
 ;; #ifdef H5_HAVE_PARALLEL
 ;; H5_DLL herr_t H5Fset_mpi_atomicity(hid_t file_id, hbool_t flag);
 ;; H5_DLL herr_t H5Fget_mpi_atomicity(hid_t file_id, hbool_t *flag);
