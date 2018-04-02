@@ -4,8 +4,8 @@
          ffi/unsafe/define
          ffi/winapi
          rackunit
-         "h5public.rkt"
-         "h5-utilities.rkt")
+         "h5-utilities.rkt"
+         "h5public.rkt")
 
 (define+provide _H5I_type_t
   (_enum '(

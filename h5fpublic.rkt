@@ -10,18 +10,6 @@
          "h5acpublic.rkt"
          "h5ipublic.rkt")
 
-(define hdf5-lib (ffi-lib "libhdf5_serial"))
-
-(define-ffi-definer define-hdf5-lib-internal hdf5-lib)
-
-(define-syntax define-hdf5
-  (syntax-rules ()
-    [(_ name body)
-     (begin
-       (provide name)
-       (define-hdf5-lib-internal name body))]))
-
-
 #|
 * These are the bits that can be passed to the `flags' argument of
 * H5Fcreate() and H5Fopen(). Use the bit-wise OR operator (|) to combine
@@ -85,6 +73,9 @@
 
 ;; Current "global" information about file
 ;; (just size info currently)
+(provide _H5F_info_t)
+(provide make-H5F_info_t)
+(provide _H5F_info_t-pointer/null)
 (define-cstruct _H5F_info_t
   ([super_ext_size hsize_t]
    [sohm (make-cstruct-type (list hsize_t _H5_ih_info_t-pointer/null))]))

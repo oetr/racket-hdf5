@@ -7,8 +7,7 @@
          rackunit
          "h5-utilities.rkt"
          "h5public.rkt"
-         "h5cpublic.rkt"
-         )
+         "h5cpublic.rkt")
          
 (define+provide H5AC__CURR_CACHE_CONFIG_VERSION	1)
 (define+provide H5AC__MAX_TRACE_FILE_NAME_LEN 1024)

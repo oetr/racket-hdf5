@@ -9,18 +9,6 @@
          "h5public.rkt"
          "h5ipublic.rkt")
 
-(define hdf5-lib (ffi-lib "libhdf5_serial"))
-
-(define-ffi-definer define-hdf5-lib-internal hdf5-lib)
-
-(define-syntax define-hdf5
-  (syntax-rules ()
-    [(_ name body)
-     (begin
-       (provide name)
-       (define-hdf5-lib-internal name body))]))
-
-
 ;; Define atomic datatypes
 (define+provide H5S_ALL         0)
 (define+provide H5S_UNLIMITED (cast -1 _int64 hsize_t))
