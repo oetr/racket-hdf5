@@ -9,6 +9,8 @@
          "h5public.rkt"
          "h5ipublic.rkt") ;; ids
 
+(provide (all-defined-out))
+
 ;; #define HOFFSET(S,M)    (offsetof(S,M))
 
 ;; These are the various classes of datatypes 
@@ -323,58 +325,58 @@
  * These types are for Intel CPU's.  They are little endian with IEEE
  * floating point.
  |#
-(define H5T_INTEL_I8		H5T_STD_I8LE)
-(define H5T_INTEL_I16		H5T_STD_I16LE)
-(define H5T_INTEL_I32		H5T_STD_I32LE)
-(define H5T_INTEL_I64		H5T_STD_I64LE)
-(define H5T_INTEL_U8		H5T_STD_U8LE)
-(define H5T_INTEL_U16		H5T_STD_U16LE)
-(define H5T_INTEL_U32		H5T_STD_U32LE)
-(define H5T_INTEL_U64		H5T_STD_U64LE)
-(define H5T_INTEL_B8		H5T_STD_B8LE)
-(define H5T_INTEL_B16		H5T_STD_B16LE)
-(define H5T_INTEL_B32		H5T_STD_B32LE)
-(define H5T_INTEL_B64		H5T_STD_B64LE)
-(define H5T_INTEL_F32		H5T_IEEE_F32LE)
-(define H5T_INTEL_F64		H5T_IEEE_F64LE)
+(define+provide H5T_INTEL_I8		H5T_STD_I8LE)
+(define+provide H5T_INTEL_I16		H5T_STD_I16LE)
+(define+provide H5T_INTEL_I32		H5T_STD_I32LE)
+(define+provide H5T_INTEL_I64		H5T_STD_I64LE)
+(define+provide H5T_INTEL_U8		H5T_STD_U8LE)
+(define+provide H5T_INTEL_U16		H5T_STD_U16LE)
+(define+provide H5T_INTEL_U32		H5T_STD_U32LE)
+(define+provide H5T_INTEL_U64		H5T_STD_U64LE)
+(define+provide H5T_INTEL_B8		H5T_STD_B8LE)
+(define+provide H5T_INTEL_B16		H5T_STD_B16LE)
+(define+provide H5T_INTEL_B32		H5T_STD_B32LE)
+(define+provide H5T_INTEL_B64		H5T_STD_B64LE)
+(define+provide H5T_INTEL_F32		H5T_IEEE_F32LE)
+(define+provide H5T_INTEL_F64		H5T_IEEE_F64LE)
 
 #|
  * These types are for DEC Alpha CPU's.  They are little endian with IEEE
  * floating point.
  |#
-(define H5T_ALPHA_I8		H5T_STD_I8LE)
-(define H5T_ALPHA_I16		H5T_STD_I16LE)
-(define H5T_ALPHA_I32		H5T_STD_I32LE)
-(define H5T_ALPHA_I64		H5T_STD_I64LE)
-(define H5T_ALPHA_U8		H5T_STD_U8LE)
-(define H5T_ALPHA_U16		H5T_STD_U16LE)
-(define H5T_ALPHA_U32		H5T_STD_U32LE)
-(define H5T_ALPHA_U64		H5T_STD_U64LE)
-(define H5T_ALPHA_B8		H5T_STD_B8LE)
-(define H5T_ALPHA_B16		H5T_STD_B16LE)
-(define H5T_ALPHA_B32		H5T_STD_B32LE)
-(define H5T_ALPHA_B64		H5T_STD_B64LE)
-(define H5T_ALPHA_F32		H5T_IEEE_F32LE)
-(define H5T_ALPHA_F64		H5T_IEEE_F64LE)
+(define+provide H5T_ALPHA_I8		H5T_STD_I8LE)
+(define+provide H5T_ALPHA_I16		H5T_STD_I16LE)
+(define+provide H5T_ALPHA_I32		H5T_STD_I32LE)
+(define+provide H5T_ALPHA_I64		H5T_STD_I64LE)
+(define+provide H5T_ALPHA_U8		H5T_STD_U8LE)
+(define+provide H5T_ALPHA_U16		H5T_STD_U16LE)
+(define+provide H5T_ALPHA_U32		H5T_STD_U32LE)
+(define+provide H5T_ALPHA_U64		H5T_STD_U64LE)
+(define+provide H5T_ALPHA_B8		H5T_STD_B8LE)
+(define+provide H5T_ALPHA_B16		H5T_STD_B16LE)
+(define+provide H5T_ALPHA_B32		H5T_STD_B32LE)
+(define+provide H5T_ALPHA_B64		H5T_STD_B64LE)
+(define+provide H5T_ALPHA_F32		H5T_IEEE_F32LE)
+(define+provide H5T_ALPHA_F64		H5T_IEEE_F64LE)
 
 #|
  * These types are for MIPS cpu's commonly used in SGI systems. They are big
  * endian with IEEE floating point.
  |#
-(define H5T_MIPS_I8		H5T_STD_I8BE)
-(define H5T_MIPS_I16		H5T_STD_I16BE)
-(define H5T_MIPS_I32		H5T_STD_I32BE)
-(define H5T_MIPS_I64		H5T_STD_I64BE)
-(define H5T_MIPS_U8		H5T_STD_U8BE)
-(define H5T_MIPS_U16		H5T_STD_U16BE)
-(define H5T_MIPS_U32		H5T_STD_U32BE)
-(define H5T_MIPS_U64		H5T_STD_U64BE)
-(define H5T_MIPS_B8		H5T_STD_B8BE)
-(define H5T_MIPS_B16		H5T_STD_B16BE)
-(define H5T_MIPS_B32		H5T_STD_B32BE)
-(define H5T_MIPS_B64		H5T_STD_B64BE)
-(define H5T_MIPS_F32		H5T_IEEE_F32BE)
-(define H5T_MIPS_F64		H5T_IEEE_F64BE)
+(define+provide H5T_MIPS_I8		H5T_STD_I8BE)
+(define+provide H5T_MIPS_I16		H5T_STD_I16BE)
+(define+provide H5T_MIPS_I32		H5T_STD_I32BE)
+(define+provide H5T_MIPS_I64		H5T_STD_I64BE)
+(define+provide H5T_MIPS_U8		H5T_STD_U8BE)
+(define+provide H5T_MIPS_U16		H5T_STD_U16BE)
+(define+provide H5T_MIPS_U32		H5T_STD_U32BE)
+(define+provide H5T_MIPS_U64		H5T_STD_U64BE)
+(define+provide H5T_MIPS_B8		H5T_STD_B8BE)
+(define+provide H5T_MIPS_B16		H5T_STD_B16BE)
+(define+provide H5T_MIPS_B32		H5T_STD_B32BE)
+(define+provide H5T_MIPS_B64		H5T_STD_B64BE)
+(define+provide H5T_MIPS_F32		H5T_IEEE_F32BE)
+(define+provide H5T_MIPS_F64		H5T_IEEE_F64BE)
 
 #|
  * The VAX floating point types (i.e. in VAX byte order)
