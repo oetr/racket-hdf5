@@ -141,9 +141,10 @@
   (_fun (filename     : _path)
         (flags        : _uint)
         (access_plist : hid_t)
-        -> (status : hid_t)
-        -> (when (< status 0)
-             (error 'H5Fopen "unable to open file."))))
+        -> (identifier : hid_t)
+        -> (if (< identifier 0)
+               (error 'H5Fopen "unable to open file.")
+               identifier)))
 
 (define-hdf5 H5Freopen
   (_fun (file_id : hid_t)

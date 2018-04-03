@@ -131,10 +131,12 @@
 
 
 (define-hdf5 H5Sget_simple_extent_dims
-  (_fun (space_id : hid_t)
-        (dims : _pointer)
-        (maxdims : _pointer)
-        -> _int))
+  (_fun (space_id) ::
+        (space_id : hid_t)
+        (dims : (_list o hid_t (H5Sget_simple_extent_ndims space_id)))
+        (maxdims : (_list o hid_t (H5Sget_simple_extent_ndims space_id)))
+        -> (status : _int)
+        -> (vector status dims maxdims)))
 
 (define-hdf5 H5Sis_simple
   (_fun (space_id : hid_t)

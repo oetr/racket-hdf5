@@ -19,6 +19,7 @@
 
 (define+provide hsize_t _ulong)
 (define+provide hssize_t _long)
+(define+provide haddr_t _ulong)
 
 #|
  * Status return values.  Failed integer functions in HDF5 result almost
