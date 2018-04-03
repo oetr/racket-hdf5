@@ -7,6 +7,8 @@
          "h5dpublic.rkt" ;; datasets
          "h5fpublic.rkt"
          "h5ipublic.rkt"
+         "h5lpublic.rkt"
+         "h5opublic.rkt"
          "h5ppublic.rkt"
          "h5spublic.rkt"
          "h5tpublic.rkt"
@@ -18,6 +20,8 @@
                        "h5dpublic.rkt" ;; datasets
                        "h5fpublic.rkt"
                        "h5ipublic.rkt"
+                       "h5lpublic.rkt"
+                       "h5opublic.rkt"
                        "h5ppublic.rkt"
                        "h5spublic.rkt"
                        "h5tpublic.rkt"))

@@ -6,16 +6,7 @@
          rackunit
          "h5-utilities.rkt")
 
-(define hdf5-lib (ffi-lib "libhdf5_serial"))
-
-(define-ffi-definer define-hdf5-lib-internal hdf5-lib)
-
-(define-syntax define-hdf5
-  (syntax-rules ()
-    [(_ name body)
-     (begin
-       (provide name)
-       (define-hdf5-lib-internal name body))]))
+(provide (all-defined-out))
 
 (define+provide hsize_t _ulong)
 (define+provide hssize_t _long)

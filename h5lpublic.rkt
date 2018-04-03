@@ -48,7 +48,10 @@
 (define+provide H5L_TYPE_BUILTIN_MAX 'H5L_TYPE_SOFT)      ;; Maximum value link value for "built-in" link types
 (define+provide H5L_TYPE_UD_MIN      'H5L_TYPE_EXTERNAL)  ;; Link ids at or above this value are "user-defined" link types.
 
- ;; ;;Information struct for link (for H5Lget_info/H5Lget_info_by_idx)
+;;Information struct for link (for H5Lget_info/H5Lget_info_by_idx)
+(provide _H5L_info_t)
+(provide make-H5L_info_t)
+(provide _H5L_info_t-pointer/null)
 (define-cstruct _H5L_info_t
   ([type H5L_type_t]      ;; Type of link
    [corder_valid hbool_t] ;; Indicate if creation order is valid
@@ -97,6 +100,9 @@
 
 
 ;; User-defined link types
+(provide _H5L_class_t)
+(provide make-H5L_class_t)
+(provide _H5L_class_t-pointer/null)
 (define-cstruct _H5L_class_t
   ([version _int]                    ;; Version number of this struct       
    [id H5L_type_t]                  ;; Link type ID                        
@@ -109,7 +115,13 @@
    [query_func _H5L_query_func_t]))  ;; Callback for queries                
 
 ;; Prototype for H5Literate/H5Literate_by_name() operator
-(define-cpointer-type+provide _H5L_iterate_t)
+;;(define-cpointer-type+provide _H5L_iterate_t)
+(define+provide _H5L_iterate_t
+  (_fun (group : hid_t)
+        (name : _string)
+        (info : _H5L_info_t-pointer/null)
+        (op_data : _pointer)
+        -> herr_t))
 ;;typedef herr_t (*H5L_iterate_t)(hid_t group, const char *name, const H5L_info_t *info,
 ;;    void *op_data);
 
@@ -232,7 +244,7 @@
         (idx_type : H5_index_t)
         (order : H5_iter_order_t)
         (idx : _pointer)
-        (op : _H5L_iterate_t/null)
+        (op : _H5L_iterate_t)
         (op_data : _pointer)
         -> herr_t))
 
@@ -242,7 +254,7 @@
         (idx_type : H5_index_t)
         (order : H5_iter_order_t)
         (idx : _pointer)
-        (op : _H5L_iterate_t/null)
+        (op : _H5L_iterate_t)
         (op_data : _pointer)
         (lapl_id : hid_t)
         -> herr_t))
@@ -251,7 +263,7 @@
   (_fun (grp_id : hid_t)
         (idx_type : H5_index_t)
         (order : H5_iter_order_t)
-        (op : _H5L_iterate_t/null)
+        (op : _H5L_iterate_t)
         (op_data : _pointer)
         -> herr_t))
 
@@ -260,7 +272,7 @@
         (group_name : _string)
         (idx_type : H5_index_t)
         (order : H5_iter_order_t)
-        (op : _H5L_iterate_t/null)
+        (op : _H5L_iterate_t)
         (op_data : _pointer)
         (lapl_id : hid_t)
         -> herr_t))
