@@ -2,4 +2,5 @@
 * Develop high-level API (based on python, etc)
 * Add a racketify macro (convert "_" into "-")
 * Add and test modules one by one
-* TODO  Pre-make result buffers for each function that needs those
+* TODO Pre-make result buffers for each function that needs those
+- is not always possible
