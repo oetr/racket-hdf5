@@ -9,16 +9,18 @@
          "h5public.rkt"
          "h5ipublic.rkt")
 
+(provide (all-defined-out))
+
 ;; Define atomic datatypes
-(define+provide H5S_ALL         0)
-(define+provide H5S_UNLIMITED (cast -1 _int64 hsize_t))
+(define H5S_ALL         0)
+(define H5S_UNLIMITED (cast -1 _int64 hsize_t))
 
 ;; Define user-level maximum number of dimensions 
 (define H5S_MAX_RANK    32)
 
 
 ;; Different types of dataspaces
-(define+provide H5S_class_t
+(define H5S_class_t
   (_enum '(
            H5S_NO_CLASS = -1  ;; error
            H5S_SCALAR   =  0  ;; scalar variable
@@ -27,7 +29,7 @@
            )))
 
 ;; Different ways of combining selections
-(define+provide H5S_seloper_t
+(define H5S_seloper_t
   (_enum
    '(
      H5S_SELECT_NOOP      = -1  ;; error
@@ -74,7 +76,7 @@
 
 
 ;; Enumerated type for the type of selection
-(define+provide H5S_sel_type
+(define H5S_sel_type
   (_enum
    '(
      H5S_SEL_ERROR      = -1 ;; Error
@@ -91,8 +93,11 @@
         -> hid_t))
 
 (define-hdf5 H5Screate_simple
-  (_fun (rank : _int)
-        (dims : (_list i hsize_t))
+  (_fun (rank dims-in (maxdims #f)) ::
+        (rank : _int)
+        (dims : (_list i hsize_t) = (if (list? dims-in)
+                                        dims-in
+                                        (for/list ([n dims-in]) n)))
         (maxdims : _pointer)
         -> hid_t))
 

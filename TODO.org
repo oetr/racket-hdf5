@@ -1,6 +1,18 @@
+* Automatic type conversion
+- don't bother with the many types
+- define "standard" types
+- allow usage of raw api too, to force a type?
+
 * Provide raw C-API
-* Develop high-level API (based on python, etc)
+- more or less done?
+- need to double check
+* Develop high-level API (based on python, c++)
 * Add a racketify macro (convert "_" into "-")
+- no need
+
 * Add and test modules one by one
+- too much work, test the essentials
+
 * TODO Pre-make result buffers for each function that needs those
 - is not always possible
+- breaks the official API

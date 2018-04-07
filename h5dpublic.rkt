@@ -9,6 +9,7 @@
          "h5public.rkt"
          "h5ipublic.rkt") ;; ids
 
+(provide (all-defined-out))
 
 #|****************|#
 #| Public Macros  |#
@@ -31,7 +32,7 @@
 ;;******************/
 
 ;; Values for the H5D_LAYOUT property */
-(define+provide H5D_layout_t
+(define H5D_layout_t
   (_enum
    '(
      H5D_LAYOUT_ERROR = -1
@@ -42,14 +43,14 @@
      )))
 
 ;; Types of chunk index data structures */
-(define+provide H5D_chunk_index_t
+(define H5D_chunk_index_t
   (_enum
    '(
      H5D_CHUNK_BTREE = 0 ;; v1 B-tree index        */
      )))
 
 ;; Values for the space allocation time property */
-(define+provide H5D_alloc_time_t
+(define H5D_alloc_time_t
   (_enum
    '(
      H5D_ALLOC_TIME_ERROR = -1
@@ -60,7 +61,7 @@
      )))
 
 ;; Values for the status of space allocation */
-(define+provide H5D_space_status_t
+(define H5D_space_status_t
   (_enum
    '(
      H5D_SPACE_STATUS_ERROR  = -1
@@ -70,7 +71,7 @@
      )))
 
 ;; Values for time of writing fill value property */
-(define+provide H5D_fill_time_t
+(define H5D_fill_time_t
   (_enum
    '(
      H5D_FILL_TIME_ERROR = -1
@@ -80,7 +81,7 @@
      )))
 
 ;; Values for fill value status */
-(define+provide H5D_fill_value_t
+(define H5D_fill_value_t
   (_enum
    '(
      H5D_FILL_VALUE_ERROR        = -1
@@ -91,13 +92,13 @@
 
 
 ;; Define the operator function pointer for H5Diterate()
-(define-cpointer-type+provide _H5D_operator_t)
+(define-cpointer-type _H5D_operator_t)
 
 ;; Define the operator function pointer for H5Dscatter()
-(define-cpointer-type+provide _H5D_scatter_func_t)
+(define-cpointer-type _H5D_scatter_func_t)
 
 ;; Define the operator function pointer for H5Dgather()
-(define-cpointer-type+provide _H5D_gather_func_t)
+(define-cpointer-type _H5D_gather_func_t)
 
 
 (define-hdf5 H5Dcreate2
@@ -167,7 +168,8 @@
         -> (status : herr_t)))
 
 (define-hdf5 H5Dwrite
-  (_fun (dset_id : hid_t)
+  (_fun (dset_id mem_type_id mem_space_id file_space_id plist_id buf) ::
+        (dset_id : hid_t)
         (mem_type_id : hid_t)
         (mem_space_id : hid_t)
         (file_space_id : hid_t)
