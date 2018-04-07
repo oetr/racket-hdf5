@@ -101,7 +101,8 @@ otherwise.
 ;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Main
 ;;;;;;;;;;;;;;;;;;;;;;;;
-(define filename "./data/h5ex_g_traverse.h5")
+(define filename "/home/petr/test.h5")
+;;(define filename "./data/h5ex_g_traverse.h5")
 
 (define f (H5Fopen filename H5F_ACC_RDONLY H5P_DEFAULT))
 

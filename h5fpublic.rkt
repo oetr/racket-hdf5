@@ -10,6 +10,8 @@
          "h5acpublic.rkt"
          "h5ipublic.rkt")
 
+(provide (all-defined-out))
+
 #|
 * These are the bits that can be passed to the `flags' argument of
 * H5Fcreate() and H5Fopen(). Use the bit-wise OR operator (|) to combine
@@ -108,6 +110,8 @@
      H5FD_MEM_OHDR       = 6    ;; Object header data
      H5FD_MEM_NTYPES             ;; Sentinel value - must be last
      )))
+
+(define+provide H5FD_MEM_NTYPES 7)
 
 
 ;; Library's file format versions

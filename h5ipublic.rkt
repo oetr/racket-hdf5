@@ -26,5 +26,4 @@
            H5I_ERROR_STACK ;; type ID for error stacks
            H5I_NTYPES)))   ;; number of library types, MUST BE LAST!
 
-;; Type of atoms to return to users
-(define+provide hid_t _int)
+

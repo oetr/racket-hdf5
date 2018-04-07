@@ -10,19 +10,21 @@
          "h5ipublic.rkt"
          "h5tpublic.rkt")
 
+(provide (all-defined-out))
+
 ;;***************
 ;; Public Macros 
 ;;***************
 
 ;; Maximum length of a link's name
 ;; (encoded in a 32-bit unsigned integer)
-(define+provide H5L_MAX_LINK_NAME_LEN (cast -1 _int32 _uint32))  ;; (4GB - 1)
+(define H5L_MAX_LINK_NAME_LEN (cast -1 _int32 _uint32))  ;; (4GB - 1)
 
 ;; Macro to indicate operation occurs on same location
-(define+provide H5L_SAME_LOC (cast 0 _int32 hid_t))
+(define H5L_SAME_LOC (cast 0 _int32 hid_t))
 
 ;; Current version of the H5L_class_t struct
-(define+provide H5L_LINK_CLASS_T_VERS 0)
+(define H5L_LINK_CLASS_T_VERS 0)
 
 
 ;;*****************
@@ -37,7 +39,7 @@
  * development team at hdfhelp@ncsa.uiuc.edu .
  * These values can never change because they appear in HDF5 files.
 |#
-(define+provide H5L_type_t
+(define H5L_type_t
   (_enum '(
     H5L_TYPE_ERROR = -1     ;; Invalid link type id
     H5L_TYPE_HARD = 0         ;; Hard link id
@@ -45,8 +47,8 @@
     H5L_TYPE_EXTERNAL = 64    ;; External link id
     H5L_TYPE_MAX = 255	      ;; Maximum link type id
 )))
-(define+provide H5L_TYPE_BUILTIN_MAX 'H5L_TYPE_SOFT)      ;; Maximum value link value for "built-in" link types
-(define+provide H5L_TYPE_UD_MIN      'H5L_TYPE_EXTERNAL)  ;; Link ids at or above this value are "user-defined" link types.
+(define H5L_TYPE_BUILTIN_MAX 'H5L_TYPE_SOFT)      ;; Maximum value link value for "built-in" link types
+(define H5L_TYPE_UD_MIN      'H5L_TYPE_EXTERNAL)  ;; Link ids at or above this value are "user-defined" link types.
 
 ;;Information struct for link (for H5Lget_info/H5Lget_info_by_idx)
 (provide _H5L_info_t)
@@ -100,9 +102,6 @@
 
 
 ;; User-defined link types
-(provide _H5L_class_t)
-(provide make-H5L_class_t)
-(provide _H5L_class_t-pointer/null)
 (define-cstruct _H5L_class_t
   ([version _int]                    ;; Version number of this struct       
    [id H5L_type_t]                  ;; Link type ID                        
@@ -115,8 +114,8 @@
    [query_func _H5L_query_func_t]))  ;; Callback for queries                
 
 ;; Prototype for H5Literate/H5Literate_by_name() operator
-;;(define-cpointer-type+provide _H5L_iterate_t)
-(define+provide _H5L_iterate_t
+;;(define-cpointer-type+provide H5L_iterate_t)
+(define H5L_iterate_t
   (_fun (group : hid_t)
         (name : _string)
         (info : _H5L_info_t-pointer/null)
@@ -126,12 +125,15 @@
 ;;    void *op_data);
 
 ;; Callback for external link traversal
-(define-cpointer-type+provide _H5L_elink_traverse_t)
-;; typedef herr_t (*H5L_elink_traverse_t)(const char *parent_file_name,
-;;     const char *parent_group_name, const char *child_file_name,
-;;     const char *child_object_name, unsigned *acc_flags, hid_t fapl_id,
-;;     void *op_data);
-
+(define H5L_elink_traverse_t
+  (_fun (parent_file_name : _string)
+        (parent_group_name : _string)
+        (child_file_name : _string)
+        (child_object_name : _string)
+        (acc_flags : _pointer)
+        (fapl_id : hid_t)
+        (op_data : _pointer)
+        -> herr_t))
 
 ;;*******************
 ;; Public Prototypes 
@@ -244,7 +246,7 @@
         (idx_type : H5_index_t)
         (order : H5_iter_order_t)
         (idx : _pointer)
-        (op : _H5L_iterate_t)
+        (op : H5L_iterate_t)
         (op_data : _pointer)
         -> herr_t))
 
@@ -254,7 +256,7 @@
         (idx_type : H5_index_t)
         (order : H5_iter_order_t)
         (idx : _pointer)
-        (op : _H5L_iterate_t)
+        (op : H5L_iterate_t)
         (op_data : _pointer)
         (lapl_id : hid_t)
         -> herr_t))
@@ -263,7 +265,7 @@
   (_fun (grp_id : hid_t)
         (idx_type : H5_index_t)
         (order : H5_iter_order_t)
-        (op : _H5L_iterate_t)
+        (op : H5L_iterate_t)
         (op_data : _pointer)
         -> herr_t))
 
@@ -272,7 +274,7 @@
         (group_name : _string)
         (idx_type : H5_index_t)
         (order : H5_iter_order_t)
-        (op : _H5L_iterate_t)
+        (op : H5L_iterate_t)
         (op_data : _pointer)
         (lapl_id : hid_t)
         -> herr_t))

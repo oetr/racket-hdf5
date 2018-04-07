@@ -24,6 +24,9 @@
 |#
 (define+provide herr_t _int)
 
+;; Type of atoms to return to users
+(define+provide hid_t _int)
+
 
 #|
  * Boolean type.  Successful return values are zero (false) or positive

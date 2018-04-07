@@ -8,6 +8,8 @@
          "h5-utilities.rkt"
          "h5public.rkt"
          "h5cpublic.rkt")
+
+(provide (all-defined-out))
          
 (define+provide H5AC__CURR_CACHE_CONFIG_VERSION	1)
 (define+provide H5AC__MAX_TRACE_FILE_NAME_LEN 1024)
@@ -15,9 +17,6 @@
 (define+provide H5AC_METADATA_WRITE_STRATEGY__PROCESS_0_ONLY 0)
 (define+provide H5AC_METADATA_WRITE_STRATEGY__DISTRIBUTED 1)
 
-(provide _H5AC_cache_config_t)
-(provide make-H5AC_cache_config_t)
-(provide _H5AC_cache_config_t-pointer/null)
 (define-cstruct _H5AC_cache_config_t
   (;; general configuration fields:
    [version _int]

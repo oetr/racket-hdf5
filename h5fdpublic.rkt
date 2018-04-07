@@ -9,6 +9,8 @@
          "h5public.rkt"
          "h5fpublic.rkt") ;; for H5F_close_degree_t
 
+(provide (all-defined-out))
+
 (define H5_HAVE_VFL 1) #|define a convenient app feature test|#
 (define H5FD_VFD_DEFAULT 0)   #| Default VFL driver value |#
 

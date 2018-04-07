@@ -15,7 +15,7 @@
 
 ;; These are the various classes of datatypes 
 ;; If this goes over 16 types (0-15), the file format will need to change)
-(define+provide H5T_class_t
+(define H5T_class_t
   (_enum
    '(
      H5T_NO_CLASS = -1 ;; error
@@ -34,7 +34,7 @@
      )))
 
 ;; Byte orders
-(define+provide H5T_order_t
+(define H5T_order_t
   (_enum
    '(
      H5T_ORDER_ERROR      = -1  ;; rror                                      
@@ -47,7 +47,7 @@
      )))
 
 ;; Types of integer sign schemes 
-(define+provide H5T_sign_t
+(define H5T_sign_t
   (_enum
    '(
      H5T_SGN_ERROR        = -1  ;; rror                                      
@@ -57,7 +57,7 @@
      )))
 
 ;; Floating-point normalization schemes
-(define+provide H5T_norm_t
+(define H5T_norm_t
   (_enum
    '(
      H5T_NORM_ERROR       = -1 ;; rror                                      
@@ -72,7 +72,7 @@
 * Character set to use for text strings.Do not change these values since
 * they appear in HDF5 files!
 |#
-(define+provide H5T_cset_t
+(define H5T_cset_t
   (_enum
    '(
      H5T_CSET_ERROR = -1 #|error|#
@@ -93,13 +93,13 @@
      H5T_CSET_RESERVED_14 = 14 #|reserved for later use		 |#
      H5T_CSET_RESERVED_15 = 15 #|reserved for later use		 |#
      )))
-(define+provide H5T_NCSET 'H5T_CSET_RESERVED_2)		#|Number of character sets actually defined|#
+(define H5T_NCSET 'H5T_CSET_RESERVED_2)		#|Number of character sets actually defined|#
 
 #|
 * Type of padding to use in character strings.Do not change these values
 * since they appear in HDF5 files!
 |#
-(define+provide H5T_str_t
+(define H5T_str_t
   (_enum
    '(
      H5T_STR_ERROR = -1 #|error|#
@@ -121,9 +121,9 @@
      H5T_STR_RESERVED_15 = 15 #|reserved for later use		 |#
      )))
 
-(define+provide H5T_NSTR 'H5T_STR_RESERVED_3) ;; num H5T_str_t types actually defined
+(define H5T_NSTR 'H5T_STR_RESERVED_3) ;; num H5T_str_t types actually defined
 #| Type of padding to use in other atomic types |#
-(define+provide H5T_pad_t
+(define H5T_pad_t
   (_enum
    '(
      H5T_PAD_ERROR = -1 #|error|#
@@ -135,7 +135,7 @@
      )))
 
 #| Commands sent to conversion functions |#
-(define+provide H5T_cmd_t
+(define H5T_cmd_t
   (_enum
    '(
      H5T_CONV_INIT	= 0	#|query and/or initialize private data	 |#
@@ -144,7 +144,7 @@
      )))
 
 #| How is the `bkg' buffer used by the conversion function? |#
-(define+provide H5T_bkg_t
+(define H5T_bkg_t
   (_enum
    '(
      H5T_BKG_NO		= 0 	#|background buffer is not needed send NULL |#
@@ -153,9 +153,6 @@
      )))
 
 ;; Type conversion client data
-(provide _H5T_cdata_t)
-(provide make-H5T_cdata_t)
-(provide _H5T_cdata_t-pointer/null)
 (define-cstruct _H5T_cdata_t
   ([command H5T_cmd_t]  ;; what should the conversion function do?
    [need_bkg H5T_bkg_t] ;; is the background buffer needed?
@@ -164,7 +161,7 @@
 
 
 #| Conversion function persistence |#
-(define+provide H5T_pers_t
+(define H5T_pers_t
   (_enum
    '(
      H5T_PERS_DONTCARE	= -1 	#|wild card				 |#
@@ -173,7 +170,7 @@
      )))
 
 #| The order to retrieve atomic native datatype |#
-(define+provide H5T_direction_t
+(define H5T_direction_t
   (_enum
    '(
      H5T_DIR_DEFAULT = 0 #|default direction is inscendent|#
@@ -182,7 +179,7 @@
      )))
 
 #| The exception type passed into the conversion callback function |#
-(define+provide H5T_conv_except_t
+(define H5T_conv_except_t
   (_enum
    '(
      H5T_CONV_EXCEPT_RANGE_HI = 0 #|source value is greater than destination's range |#
@@ -195,7 +192,7 @@
      )))
 
 #| The return value from conversion callback function H5T_conv_except_func_t |#
-(define+provide H5T_conv_ret_t
+(define H5T_conv_ret_t
   (_enum
    '(
      H5T_CONV_ABORT = -1 #|abort conversion |#
@@ -214,177 +211,203 @@
    [p _pointer])) ;; Pointer to VL data
 
 ;; Variable Length String information 
-(define+provide H5T_VARIABLE    (cast -1 _int64 _size))  ;; Indicate that a string is variable length (null-terminated in C, instead of fixed length)
+(define H5T_VARIABLE    (cast -1 _int64 _size))  ;; Indicate that a string is variable length (null-terminated in C, instead of fixed length)
 
 ;; Opaque information
-(define+provide H5T_OPAQUE_TAG_MAX      256)    ;; Maximum length of an opaque tag
-                                        ;; This could be raised without too much difficulty
+(define H5T_OPAQUE_TAG_MAX      256)    ;; Maximum length of an opaque tag
+;; This could be raised without too much difficulty
+
+
+;; All datatype conversion functions are...
+(define H5T_conv_t
+  (_fun (src_id : hid_t)
+         (dst_id : hid_t)
+         (cdata : _H5T_cdata_t)
+         (nelmts : _size)
+         (buf_stride : _size)
+         (bkg_stride : _size)
+         (buf : _pointer)
+         (bkg : _pointer)
+         (dset_xfer_plist : hid_t)
+         -> herr_t))
+
+#| Exception handler.  If an exception like overflow happenes during conversion,
+ * this function is called if it's registered through H5Pset_type_conv_cb.
+|#
+(define H5T_conv_except_func_t
+  (_fun (except_type : H5T_conv_except_t)
+         (src_id : hid_t)
+         (dst_id : hid_t)
+         (src_buf : _pointer)
+         (dst_buf : _pointer)
+         (user_data : _pointer)
+         -> H5T_conv_ret_t))
 
 #|
  * The IEEE floating point types in various byte orders.
 |#
 (local () (H5open)(void))
-(define-c+provide H5T_IEEE_F32BE_g hdf5-lib hid_t)
-(define-c+provide H5T_IEEE_F32LE_g hdf5-lib hid_t)
-(define-c+provide H5T_IEEE_F64BE_g hdf5-lib hid_t)
-(define-c+provide H5T_IEEE_F64LE_g hdf5-lib hid_t)
+(define-c H5T_IEEE_F32BE_g hdf5-lib hid_t)
+(define-c H5T_IEEE_F32LE_g hdf5-lib hid_t)
+(define-c H5T_IEEE_F64BE_g hdf5-lib hid_t)
+(define-c H5T_IEEE_F64LE_g hdf5-lib hid_t)
 
-(define+provide H5T_IEEE_F32BE H5T_IEEE_F32BE_g)
-(define+provide H5T_IEEE_F32LE H5T_IEEE_F32LE_g)
-(define+provide H5T_IEEE_F64BE H5T_IEEE_F64BE_g)
-(define+provide H5T_IEEE_F64LE H5T_IEEE_F64LE_g)
+(define H5T_IEEE_F32BE H5T_IEEE_F32BE_g)
+(define H5T_IEEE_F32LE H5T_IEEE_F32LE_g)
+(define H5T_IEEE_F64BE H5T_IEEE_F64BE_g)
+(define H5T_IEEE_F64LE H5T_IEEE_F64LE_g)
 
 
 #|
  * These are "standard" types.  For instance, signed (2's complement) and
  * unsigned integers of various sizes and byte orders.
 |#
-(define-c+provide H5T_STD_I8BE_g hdf5-lib hid_t)
-(define-c+provide H5T_STD_I8LE_g hdf5-lib hid_t)
-(define-c+provide H5T_STD_I16BE_g hdf5-lib hid_t)
-(define-c+provide H5T_STD_I16LE_g hdf5-lib hid_t)
-(define-c+provide H5T_STD_I32BE_g hdf5-lib hid_t)
-(define-c+provide H5T_STD_I32LE_g hdf5-lib hid_t)
-(define-c+provide H5T_STD_I64BE_g hdf5-lib hid_t)
-(define-c+provide H5T_STD_I64LE_g hdf5-lib hid_t)
-(define-c+provide H5T_STD_U8BE_g hdf5-lib hid_t)
-(define-c+provide H5T_STD_U8LE_g hdf5-lib hid_t)
-(define-c+provide H5T_STD_U16BE_g hdf5-lib hid_t)
-(define-c+provide H5T_STD_U16LE_g hdf5-lib hid_t)
-(define-c+provide H5T_STD_U32BE_g hdf5-lib hid_t)
-(define-c+provide H5T_STD_U32LE_g hdf5-lib hid_t)
-(define-c+provide H5T_STD_U64BE_g hdf5-lib hid_t)
-(define-c+provide H5T_STD_U64LE_g hdf5-lib hid_t)
-(define-c+provide H5T_STD_B8BE_g hdf5-lib hid_t)
-(define-c+provide H5T_STD_B8LE_g hdf5-lib hid_t)
-(define-c+provide H5T_STD_B16BE_g hdf5-lib hid_t)
-(define-c+provide H5T_STD_B16LE_g hdf5-lib hid_t)
-(define-c+provide H5T_STD_B32BE_g hdf5-lib hid_t)
-(define-c+provide H5T_STD_B32LE_g hdf5-lib hid_t)
-(define-c+provide H5T_STD_B64BE_g hdf5-lib hid_t)
-(define-c+provide H5T_STD_B64LE_g hdf5-lib hid_t)
-(define-c+provide H5T_STD_REF_OBJ_g hdf5-lib hid_t)
-(define-c+provide H5T_STD_REF_DSETREG_g hdf5-lib hid_t)
-(define+provide H5T_STD_I8BE H5T_STD_I8BE_g)
-(define+provide H5T_STD_I8LE H5T_STD_I8LE_g)
-(define+provide H5T_STD_I16BE H5T_STD_I16BE_g)
-(define+provide H5T_STD_I16LE H5T_STD_I16LE_g)
-(define+provide H5T_STD_I32BE H5T_STD_I32BE_g)
-(define+provide H5T_STD_I32LE H5T_STD_I32LE_g)
-(define+provide H5T_STD_I64BE H5T_STD_I64BE_g)
-(define+provide H5T_STD_I64LE H5T_STD_I64LE_g)
-(define+provide H5T_STD_U8BE H5T_STD_U8BE_g)
-(define+provide H5T_STD_U8LE H5T_STD_U8LE_g)
-(define+provide H5T_STD_U16BE H5T_STD_U16BE_g)
-(define+provide H5T_STD_U16LE H5T_STD_U16LE_g)
-(define+provide H5T_STD_U32BE H5T_STD_U32BE_g)
-(define+provide H5T_STD_U32LE H5T_STD_U32LE_g)
-(define+provide H5T_STD_U64BE H5T_STD_U64BE_g)
-(define+provide H5T_STD_U64LE H5T_STD_U64LE_g)
-(define+provide H5T_STD_B8BE H5T_STD_B8BE_g)
-(define+provide H5T_STD_B8LE H5T_STD_B8LE_g)
-(define+provide H5T_STD_B16BE H5T_STD_B16BE_g)
-(define+provide H5T_STD_B16LE H5T_STD_B16LE_g)
-(define+provide H5T_STD_B32BE H5T_STD_B32BE_g)
-(define+provide H5T_STD_B32LE H5T_STD_B32LE_g)
-(define+provide H5T_STD_B64BE H5T_STD_B64BE_g)
-(define+provide H5T_STD_B64LE H5T_STD_B64LE_g)
-(define+provide H5T_STD_REF_OBJ H5T_STD_REF_OBJ_g)
-(define+provide H5T_STD_REF_DSETREG H5T_STD_REF_DSETREG_g)
+(define-c H5T_STD_I8BE_g hdf5-lib hid_t)
+(define-c H5T_STD_I8LE_g hdf5-lib hid_t)
+(define-c H5T_STD_I16BE_g hdf5-lib hid_t)
+(define-c H5T_STD_I16LE_g hdf5-lib hid_t)
+(define-c H5T_STD_I32BE_g hdf5-lib hid_t)
+(define-c H5T_STD_I32LE_g hdf5-lib hid_t)
+(define-c H5T_STD_I64BE_g hdf5-lib hid_t)
+(define-c H5T_STD_I64LE_g hdf5-lib hid_t)
+(define-c H5T_STD_U8BE_g hdf5-lib hid_t)
+(define-c H5T_STD_U8LE_g hdf5-lib hid_t)
+(define-c H5T_STD_U16BE_g hdf5-lib hid_t)
+(define-c H5T_STD_U16LE_g hdf5-lib hid_t)
+(define-c H5T_STD_U32BE_g hdf5-lib hid_t)
+(define-c H5T_STD_U32LE_g hdf5-lib hid_t)
+(define-c H5T_STD_U64BE_g hdf5-lib hid_t)
+(define-c H5T_STD_U64LE_g hdf5-lib hid_t)
+(define-c H5T_STD_B8BE_g hdf5-lib hid_t)
+(define-c H5T_STD_B8LE_g hdf5-lib hid_t)
+(define-c H5T_STD_B16BE_g hdf5-lib hid_t)
+(define-c H5T_STD_B16LE_g hdf5-lib hid_t)
+(define-c H5T_STD_B32BE_g hdf5-lib hid_t)
+(define-c H5T_STD_B32LE_g hdf5-lib hid_t)
+(define-c H5T_STD_B64BE_g hdf5-lib hid_t)
+(define-c H5T_STD_B64LE_g hdf5-lib hid_t)
+(define-c H5T_STD_REF_OBJ_g hdf5-lib hid_t)
+(define-c H5T_STD_REF_DSETREG_g hdf5-lib hid_t)
+(define H5T_STD_I8BE H5T_STD_I8BE_g)
+(define H5T_STD_I8LE H5T_STD_I8LE_g)
+(define H5T_STD_I16BE H5T_STD_I16BE_g)
+(define H5T_STD_I16LE H5T_STD_I16LE_g)
+(define H5T_STD_I32BE H5T_STD_I32BE_g)
+(define H5T_STD_I32LE H5T_STD_I32LE_g)
+(define H5T_STD_I64BE H5T_STD_I64BE_g)
+(define H5T_STD_I64LE H5T_STD_I64LE_g)
+(define H5T_STD_U8BE H5T_STD_U8BE_g)
+(define H5T_STD_U8LE H5T_STD_U8LE_g)
+(define H5T_STD_U16BE H5T_STD_U16BE_g)
+(define H5T_STD_U16LE H5T_STD_U16LE_g)
+(define H5T_STD_U32BE H5T_STD_U32BE_g)
+(define H5T_STD_U32LE H5T_STD_U32LE_g)
+(define H5T_STD_U64BE H5T_STD_U64BE_g)
+(define H5T_STD_U64LE H5T_STD_U64LE_g)
+(define H5T_STD_B8BE H5T_STD_B8BE_g)
+(define H5T_STD_B8LE H5T_STD_B8LE_g)
+(define H5T_STD_B16BE H5T_STD_B16BE_g)
+(define H5T_STD_B16LE H5T_STD_B16LE_g)
+(define H5T_STD_B32BE H5T_STD_B32BE_g)
+(define H5T_STD_B32LE H5T_STD_B32LE_g)
+(define H5T_STD_B64BE H5T_STD_B64BE_g)
+(define H5T_STD_B64LE H5T_STD_B64LE_g)
+(define H5T_STD_REF_OBJ H5T_STD_REF_OBJ_g)
+(define H5T_STD_REF_DSETREG H5T_STD_REF_DSETREG_g)
 
 
 
 #|
  * Types which are particular to Unix.
 |#
-(define-c+provide H5T_UNIX_D32BE_g hdf5-lib hid_t)
-(define-c+provide H5T_UNIX_D32LE_g hdf5-lib hid_t)
-(define-c+provide H5T_UNIX_D64BE_g hdf5-lib hid_t)
-(define-c+provide H5T_UNIX_D64LE_g hdf5-lib hid_t)
-(define+provide H5T_UNIX_D32BE H5T_UNIX_D32BE_g)
-(define+provide H5T_UNIX_D32LE H5T_UNIX_D32LE_g)
-(define+provide H5T_UNIX_D64BE H5T_UNIX_D64BE_g)
-(define+provide H5T_UNIX_D64LE H5T_UNIX_D64LE_g)
+(define-c H5T_UNIX_D32BE_g hdf5-lib hid_t)
+(define-c H5T_UNIX_D32LE_g hdf5-lib hid_t)
+(define-c H5T_UNIX_D64BE_g hdf5-lib hid_t)
+(define-c H5T_UNIX_D64LE_g hdf5-lib hid_t)
+(define H5T_UNIX_D32BE H5T_UNIX_D32BE_g)
+(define H5T_UNIX_D32LE H5T_UNIX_D32LE_g)
+(define H5T_UNIX_D64BE H5T_UNIX_D64BE_g)
+(define H5T_UNIX_D64LE H5T_UNIX_D64LE_g)
 
 
 #|
  * Types particular to the C language.  String types use `bytes' instead
  * of `bits' as their size.
 |#
-(define-c+provide H5T_C_S1_g hdf5-lib hid_t)
-(define+provide H5T_C_S1 H5T_C_S1_g)
+(define-c H5T_C_S1_g hdf5-lib hid_t)
+(define H5T_C_S1 H5T_C_S1_g)
 
 #|
  * Types particular to Fortran.
 |#
-(define-c+provide H5T_FORTRAN_S1_g hdf5-lib hid_t)
-(define+provide H5T_FORTRAN_S1 H5T_FORTRAN_S1_g)
+(define-c H5T_FORTRAN_S1_g hdf5-lib hid_t)
+(define H5T_FORTRAN_S1 H5T_FORTRAN_S1_g)
 
 
 #|
  * These types are for Intel CPU's.  They are little endian with IEEE
  * floating point.
  |#
-(define+provide H5T_INTEL_I8		H5T_STD_I8LE)
-(define+provide H5T_INTEL_I16		H5T_STD_I16LE)
-(define+provide H5T_INTEL_I32		H5T_STD_I32LE)
-(define+provide H5T_INTEL_I64		H5T_STD_I64LE)
-(define+provide H5T_INTEL_U8		H5T_STD_U8LE)
-(define+provide H5T_INTEL_U16		H5T_STD_U16LE)
-(define+provide H5T_INTEL_U32		H5T_STD_U32LE)
-(define+provide H5T_INTEL_U64		H5T_STD_U64LE)
-(define+provide H5T_INTEL_B8		H5T_STD_B8LE)
-(define+provide H5T_INTEL_B16		H5T_STD_B16LE)
-(define+provide H5T_INTEL_B32		H5T_STD_B32LE)
-(define+provide H5T_INTEL_B64		H5T_STD_B64LE)
-(define+provide H5T_INTEL_F32		H5T_IEEE_F32LE)
-(define+provide H5T_INTEL_F64		H5T_IEEE_F64LE)
+(define H5T_INTEL_I8		H5T_STD_I8LE)
+(define H5T_INTEL_I16		H5T_STD_I16LE)
+(define H5T_INTEL_I32		H5T_STD_I32LE)
+(define H5T_INTEL_I64		H5T_STD_I64LE)
+(define H5T_INTEL_U8		H5T_STD_U8LE)
+(define H5T_INTEL_U16		H5T_STD_U16LE)
+(define H5T_INTEL_U32		H5T_STD_U32LE)
+(define H5T_INTEL_U64		H5T_STD_U64LE)
+(define H5T_INTEL_B8		H5T_STD_B8LE)
+(define H5T_INTEL_B16		H5T_STD_B16LE)
+(define H5T_INTEL_B32		H5T_STD_B32LE)
+(define H5T_INTEL_B64		H5T_STD_B64LE)
+(define H5T_INTEL_F32		H5T_IEEE_F32LE)
+(define H5T_INTEL_F64		H5T_IEEE_F64LE)
 
 #|
  * These types are for DEC Alpha CPU's.  They are little endian with IEEE
  * floating point.
  |#
-(define+provide H5T_ALPHA_I8		H5T_STD_I8LE)
-(define+provide H5T_ALPHA_I16		H5T_STD_I16LE)
-(define+provide H5T_ALPHA_I32		H5T_STD_I32LE)
-(define+provide H5T_ALPHA_I64		H5T_STD_I64LE)
-(define+provide H5T_ALPHA_U8		H5T_STD_U8LE)
-(define+provide H5T_ALPHA_U16		H5T_STD_U16LE)
-(define+provide H5T_ALPHA_U32		H5T_STD_U32LE)
-(define+provide H5T_ALPHA_U64		H5T_STD_U64LE)
-(define+provide H5T_ALPHA_B8		H5T_STD_B8LE)
-(define+provide H5T_ALPHA_B16		H5T_STD_B16LE)
-(define+provide H5T_ALPHA_B32		H5T_STD_B32LE)
-(define+provide H5T_ALPHA_B64		H5T_STD_B64LE)
-(define+provide H5T_ALPHA_F32		H5T_IEEE_F32LE)
-(define+provide H5T_ALPHA_F64		H5T_IEEE_F64LE)
+(define H5T_ALPHA_I8		H5T_STD_I8LE)
+(define H5T_ALPHA_I16		H5T_STD_I16LE)
+(define H5T_ALPHA_I32		H5T_STD_I32LE)
+(define H5T_ALPHA_I64		H5T_STD_I64LE)
+(define H5T_ALPHA_U8		H5T_STD_U8LE)
+(define H5T_ALPHA_U16		H5T_STD_U16LE)
+(define H5T_ALPHA_U32		H5T_STD_U32LE)
+(define H5T_ALPHA_U64		H5T_STD_U64LE)
+(define H5T_ALPHA_B8		H5T_STD_B8LE)
+(define H5T_ALPHA_B16		H5T_STD_B16LE)
+(define H5T_ALPHA_B32		H5T_STD_B32LE)
+(define H5T_ALPHA_B64		H5T_STD_B64LE)
+(define H5T_ALPHA_F32		H5T_IEEE_F32LE)
+(define H5T_ALPHA_F64		H5T_IEEE_F64LE)
 
 #|
  * These types are for MIPS cpu's commonly used in SGI systems. They are big
  * endian with IEEE floating point.
  |#
-(define+provide H5T_MIPS_I8		H5T_STD_I8BE)
-(define+provide H5T_MIPS_I16		H5T_STD_I16BE)
-(define+provide H5T_MIPS_I32		H5T_STD_I32BE)
-(define+provide H5T_MIPS_I64		H5T_STD_I64BE)
-(define+provide H5T_MIPS_U8		H5T_STD_U8BE)
-(define+provide H5T_MIPS_U16		H5T_STD_U16BE)
-(define+provide H5T_MIPS_U32		H5T_STD_U32BE)
-(define+provide H5T_MIPS_U64		H5T_STD_U64BE)
-(define+provide H5T_MIPS_B8		H5T_STD_B8BE)
-(define+provide H5T_MIPS_B16		H5T_STD_B16BE)
-(define+provide H5T_MIPS_B32		H5T_STD_B32BE)
-(define+provide H5T_MIPS_B64		H5T_STD_B64BE)
-(define+provide H5T_MIPS_F32		H5T_IEEE_F32BE)
-(define+provide H5T_MIPS_F64		H5T_IEEE_F64BE)
+(define H5T_MIPS_I8		H5T_STD_I8BE)
+(define H5T_MIPS_I16		H5T_STD_I16BE)
+(define H5T_MIPS_I32		H5T_STD_I32BE)
+(define H5T_MIPS_I64		H5T_STD_I64BE)
+(define H5T_MIPS_U8		H5T_STD_U8BE)
+(define H5T_MIPS_U16		H5T_STD_U16BE)
+(define H5T_MIPS_U32		H5T_STD_U32BE)
+(define H5T_MIPS_U64		H5T_STD_U64BE)
+(define H5T_MIPS_B8		H5T_STD_B8BE)
+(define H5T_MIPS_B16		H5T_STD_B16BE)
+(define H5T_MIPS_B32		H5T_STD_B32BE)
+(define H5T_MIPS_B64		H5T_STD_B64BE)
+(define H5T_MIPS_F32		H5T_IEEE_F32BE)
+(define H5T_MIPS_F64		H5T_IEEE_F64BE)
 
 #|
  * The VAX floating point types (i.e. in VAX byte order)
 |#
-(define-c+provide H5T_VAX_F32_g hdf5-lib hid_t)
-(define-c+provide H5T_VAX_F64_g hdf5-lib hid_t)
-(define+provide H5T_VAX_F32 H5T_VAX_F32_g)
-(define+provide H5T_VAX_F64 H5T_VAX_F64_g)
+(define-c H5T_VAX_F32_g hdf5-lib hid_t)
+(define-c H5T_VAX_F64_g hdf5-lib hid_t)
+(define H5T_VAX_F32 H5T_VAX_F32_g)
+(define H5T_VAX_F64 H5T_VAX_F64_g)
 
 
 #|
@@ -398,113 +421,113 @@
  *|#
 ;;#define H5T_NATIVE_CHAR		(CHAR_MIN?H5T_NATIVE_SCHAR:H5T_NATIVE_UCHAR)
 
-(define-c+provide H5T_NATIVE_SCHAR_g hdf5-lib hid_t)
-(define-c+provide H5T_NATIVE_UCHAR_g hdf5-lib hid_t)
-(define-c+provide H5T_NATIVE_SHORT_g hdf5-lib hid_t)
-(define-c+provide H5T_NATIVE_USHORT_g hdf5-lib hid_t)
-(define-c+provide H5T_NATIVE_INT_g hdf5-lib hid_t)
-(define-c+provide H5T_NATIVE_UINT_g hdf5-lib hid_t)
-(define-c+provide H5T_NATIVE_LONG_g hdf5-lib hid_t)
-(define-c+provide H5T_NATIVE_ULONG_g hdf5-lib hid_t)
-(define-c+provide H5T_NATIVE_LLONG_g hdf5-lib hid_t)
-(define-c+provide H5T_NATIVE_ULLONG_g hdf5-lib hid_t)
-(define-c+provide H5T_NATIVE_FLOAT_g hdf5-lib hid_t)
-(define-c+provide H5T_NATIVE_DOUBLE_g hdf5-lib hid_t)
+(define-c H5T_NATIVE_SCHAR_g hdf5-lib hid_t)
+(define-c H5T_NATIVE_UCHAR_g hdf5-lib hid_t)
+(define-c H5T_NATIVE_SHORT_g hdf5-lib hid_t)
+(define-c H5T_NATIVE_USHORT_g hdf5-lib hid_t)
+(define-c H5T_NATIVE_INT_g hdf5-lib hid_t)
+(define-c H5T_NATIVE_UINT_g hdf5-lib hid_t)
+(define-c H5T_NATIVE_LONG_g hdf5-lib hid_t)
+(define-c H5T_NATIVE_ULONG_g hdf5-lib hid_t)
+(define-c H5T_NATIVE_LLONG_g hdf5-lib hid_t)
+(define-c H5T_NATIVE_ULLONG_g hdf5-lib hid_t)
+(define-c H5T_NATIVE_FLOAT_g hdf5-lib hid_t)
+(define-c H5T_NATIVE_DOUBLE_g hdf5-lib hid_t)
 
-(define-c+provide H5T_NATIVE_B8_g hdf5-lib hid_t)
-(define-c+provide H5T_NATIVE_B16_g hdf5-lib hid_t)
-(define-c+provide H5T_NATIVE_B32_g hdf5-lib hid_t)
-(define-c+provide H5T_NATIVE_B64_g hdf5-lib hid_t)
-(define-c+provide H5T_NATIVE_OPAQUE_g hdf5-lib hid_t)
-(define-c+provide H5T_NATIVE_HADDR_g hdf5-lib hid_t)
-(define-c+provide H5T_NATIVE_HSIZE_g hdf5-lib hid_t)
-(define-c+provide H5T_NATIVE_HSSIZE_g hdf5-lib hid_t)
-(define-c+provide H5T_NATIVE_HERR_g hdf5-lib hid_t)
-(define-c+provide H5T_NATIVE_HBOOL_g hdf5-lib hid_t)
+(define-c H5T_NATIVE_B8_g hdf5-lib hid_t)
+(define-c H5T_NATIVE_B16_g hdf5-lib hid_t)
+(define-c H5T_NATIVE_B32_g hdf5-lib hid_t)
+(define-c H5T_NATIVE_B64_g hdf5-lib hid_t)
+(define-c H5T_NATIVE_OPAQUE_g hdf5-lib hid_t)
+(define-c H5T_NATIVE_HADDR_g hdf5-lib hid_t)
+(define-c H5T_NATIVE_HSIZE_g hdf5-lib hid_t)
+(define-c H5T_NATIVE_HSSIZE_g hdf5-lib hid_t)
+(define-c H5T_NATIVE_HERR_g hdf5-lib hid_t)
+(define-c H5T_NATIVE_HBOOL_g hdf5-lib hid_t)
 
-(define-c+provide H5T_NATIVE_LDOUBLE_g hdf5-lib hid_t)
+(define-c H5T_NATIVE_LDOUBLE_g hdf5-lib hid_t)
 
-(define+provide H5T_NATIVE_SCHAR H5T_NATIVE_SCHAR_g)
-(define+provide H5T_NATIVE_UCHAR H5T_NATIVE_UCHAR_g)
-(define+provide H5T_NATIVE_SHORT H5T_NATIVE_SHORT_g)
-(define+provide H5T_NATIVE_USHORT H5T_NATIVE_USHORT_g)
-(define+provide H5T_NATIVE_INT H5T_NATIVE_INT_g)
-(define+provide H5T_NATIVE_UINT H5T_NATIVE_UINT_g)
-(define+provide H5T_NATIVE_LONG H5T_NATIVE_LONG_g)
-(define+provide H5T_NATIVE_ULONG H5T_NATIVE_ULONG_g)
-(define+provide H5T_NATIVE_LLONG H5T_NATIVE_LLONG_g)
-(define+provide H5T_NATIVE_ULLONG H5T_NATIVE_ULLONG_g)
-(define+provide H5T_NATIVE_FLOAT H5T_NATIVE_FLOAT_g)
-(define+provide H5T_NATIVE_DOUBLE H5T_NATIVE_DOUBLE_g)
+(define H5T_NATIVE_SCHAR H5T_NATIVE_SCHAR_g)
+(define H5T_NATIVE_UCHAR H5T_NATIVE_UCHAR_g)
+(define H5T_NATIVE_SHORT H5T_NATIVE_SHORT_g)
+(define H5T_NATIVE_USHORT H5T_NATIVE_USHORT_g)
+(define H5T_NATIVE_INT H5T_NATIVE_INT_g)
+(define H5T_NATIVE_UINT H5T_NATIVE_UINT_g)
+(define H5T_NATIVE_LONG H5T_NATIVE_LONG_g)
+(define H5T_NATIVE_ULONG H5T_NATIVE_ULONG_g)
+(define H5T_NATIVE_LLONG H5T_NATIVE_LLONG_g)
+(define H5T_NATIVE_ULLONG H5T_NATIVE_ULLONG_g)
+(define H5T_NATIVE_FLOAT H5T_NATIVE_FLOAT_g)
+(define H5T_NATIVE_DOUBLE H5T_NATIVE_DOUBLE_g)
 
-(define+provide H5T_NATIVE_LDOUBLE H5T_NATIVE_LDOUBLE_g)
+(define H5T_NATIVE_LDOUBLE H5T_NATIVE_LDOUBLE_g)
 
-(define+provide H5T_NATIVE_B8 H5T_NATIVE_B8_g)
-(define+provide H5T_NATIVE_B16 H5T_NATIVE_B16_g)
-(define+provide H5T_NATIVE_B32 H5T_NATIVE_B32_g)
-(define+provide H5T_NATIVE_B64 H5T_NATIVE_B64_g)
-(define+provide H5T_NATIVE_OPAQUE H5T_NATIVE_OPAQUE_g)
-(define+provide H5T_NATIVE_HADDR H5T_NATIVE_HADDR_g)
-(define+provide H5T_NATIVE_HSIZE H5T_NATIVE_HSIZE_g)
-(define+provide H5T_NATIVE_HSSIZE H5T_NATIVE_HSSIZE_g)
-(define+provide H5T_NATIVE_HERR H5T_NATIVE_HERR_g)
-(define+provide H5T_NATIVE_HBOOL H5T_NATIVE_HBOOL_g)
+(define H5T_NATIVE_B8 H5T_NATIVE_B8_g)
+(define H5T_NATIVE_B16 H5T_NATIVE_B16_g)
+(define H5T_NATIVE_B32 H5T_NATIVE_B32_g)
+(define H5T_NATIVE_B64 H5T_NATIVE_B64_g)
+(define H5T_NATIVE_OPAQUE H5T_NATIVE_OPAQUE_g)
+(define H5T_NATIVE_HADDR H5T_NATIVE_HADDR_g)
+(define H5T_NATIVE_HSIZE H5T_NATIVE_HSIZE_g)
+(define H5T_NATIVE_HSSIZE H5T_NATIVE_HSSIZE_g)
+(define H5T_NATIVE_HERR H5T_NATIVE_HERR_g)
+(define H5T_NATIVE_HBOOL H5T_NATIVE_HBOOL_g)
 
 
 
 
 ;; C9x integer types
-(define-c+provide H5T_NATIVE_INT8_g hdf5-lib hid_t)
-(define-c+provide H5T_NATIVE_UINT8_g hdf5-lib hid_t)
-(define-c+provide H5T_NATIVE_INT_LEAST8_g hdf5-lib hid_t)
-(define-c+provide H5T_NATIVE_UINT_LEAST8_g hdf5-lib hid_t)
-(define-c+provide H5T_NATIVE_INT_FAST8_g hdf5-lib hid_t)
-(define-c+provide H5T_NATIVE_UINT_FAST8_g hdf5-lib hid_t)
-(define+provide H5T_NATIVE_INT8 H5T_NATIVE_INT8_g)
-(define+provide H5T_NATIVE_UINT8 H5T_NATIVE_UINT8_g)
-(define+provide H5T_NATIVE_INT_LEAST8 H5T_NATIVE_INT_LEAST8_g)
-(define+provide H5T_NATIVE_UINT_LEAST8 H5T_NATIVE_UINT_LEAST8_g)
-(define+provide H5T_NATIVE_INT_FAST8 H5T_NATIVE_INT_FAST8_g)
-(define+provide H5T_NATIVE_UINT_FAST8 H5T_NATIVE_UINT_FAST8_g)
+(define-c H5T_NATIVE_INT8_g hdf5-lib hid_t)
+(define-c H5T_NATIVE_UINT8_g hdf5-lib hid_t)
+(define-c H5T_NATIVE_INT_LEAST8_g hdf5-lib hid_t)
+(define-c H5T_NATIVE_UINT_LEAST8_g hdf5-lib hid_t)
+(define-c H5T_NATIVE_INT_FAST8_g hdf5-lib hid_t)
+(define-c H5T_NATIVE_UINT_FAST8_g hdf5-lib hid_t)
+(define H5T_NATIVE_INT8 H5T_NATIVE_INT8_g)
+(define H5T_NATIVE_UINT8 H5T_NATIVE_UINT8_g)
+(define H5T_NATIVE_INT_LEAST8 H5T_NATIVE_INT_LEAST8_g)
+(define H5T_NATIVE_UINT_LEAST8 H5T_NATIVE_UINT_LEAST8_g)
+(define H5T_NATIVE_INT_FAST8 H5T_NATIVE_INT_FAST8_g)
+(define H5T_NATIVE_UINT_FAST8 H5T_NATIVE_UINT_FAST8_g)
 
-(define-c+provide H5T_NATIVE_INT16_g hdf5-lib hid_t)
-(define-c+provide H5T_NATIVE_UINT16_g hdf5-lib hid_t)
-(define-c+provide H5T_NATIVE_INT_LEAST16_g hdf5-lib hid_t)
-(define-c+provide H5T_NATIVE_UINT_LEAST16_g hdf5-lib hid_t)
-(define-c+provide H5T_NATIVE_INT_FAST16_g hdf5-lib hid_t)
-(define-c+provide H5T_NATIVE_UINT_FAST16_g hdf5-lib hid_t)
-(define+provide H5T_NATIVE_INT16 H5T_NATIVE_INT16_g)
-(define+provide H5T_NATIVE_UINT16 H5T_NATIVE_UINT16_g)
-(define+provide H5T_NATIVE_INT_LEAST16 H5T_NATIVE_INT_LEAST16_g)
-(define+provide H5T_NATIVE_UINT_LEAST16 H5T_NATIVE_UINT_LEAST16_g)
-(define+provide H5T_NATIVE_INT_FAST16 H5T_NATIVE_INT_FAST16_g)
-(define+provide H5T_NATIVE_UINT_FAST16 H5T_NATIVE_UINT_FAST16_g)
+(define-c H5T_NATIVE_INT16_g hdf5-lib hid_t)
+(define-c H5T_NATIVE_UINT16_g hdf5-lib hid_t)
+(define-c H5T_NATIVE_INT_LEAST16_g hdf5-lib hid_t)
+(define-c H5T_NATIVE_UINT_LEAST16_g hdf5-lib hid_t)
+(define-c H5T_NATIVE_INT_FAST16_g hdf5-lib hid_t)
+(define-c H5T_NATIVE_UINT_FAST16_g hdf5-lib hid_t)
+(define H5T_NATIVE_INT16 H5T_NATIVE_INT16_g)
+(define H5T_NATIVE_UINT16 H5T_NATIVE_UINT16_g)
+(define H5T_NATIVE_INT_LEAST16 H5T_NATIVE_INT_LEAST16_g)
+(define H5T_NATIVE_UINT_LEAST16 H5T_NATIVE_UINT_LEAST16_g)
+(define H5T_NATIVE_INT_FAST16 H5T_NATIVE_INT_FAST16_g)
+(define H5T_NATIVE_UINT_FAST16 H5T_NATIVE_UINT_FAST16_g)
 
-(define-c+provide H5T_NATIVE_INT32_g hdf5-lib hid_t)
-(define-c+provide H5T_NATIVE_UINT32_g hdf5-lib hid_t)
-(define-c+provide H5T_NATIVE_INT_LEAST32_g hdf5-lib hid_t)
-(define-c+provide H5T_NATIVE_UINT_LEAST32_g hdf5-lib hid_t)
-(define-c+provide H5T_NATIVE_INT_FAST32_g hdf5-lib hid_t)
-(define-c+provide H5T_NATIVE_UINT_FAST32_g hdf5-lib hid_t)
-(define+provide H5T_NATIVE_INT32 H5T_NATIVE_INT32_g)
-(define+provide H5T_NATIVE_UINT32 H5T_NATIVE_UINT32_g)
-(define+provide H5T_NATIVE_INT_LEAST32 H5T_NATIVE_INT_LEAST32_g)
-(define+provide H5T_NATIVE_UINT_LEAST32 H5T_NATIVE_UINT_LEAST32_g)
-(define+provide H5T_NATIVE_INT_FAST32 H5T_NATIVE_INT_FAST32_g)
-(define+provide H5T_NATIVE_UINT_FAST32 H5T_NATIVE_UINT_FAST32_g)
+(define-c H5T_NATIVE_INT32_g hdf5-lib hid_t)
+(define-c H5T_NATIVE_UINT32_g hdf5-lib hid_t)
+(define-c H5T_NATIVE_INT_LEAST32_g hdf5-lib hid_t)
+(define-c H5T_NATIVE_UINT_LEAST32_g hdf5-lib hid_t)
+(define-c H5T_NATIVE_INT_FAST32_g hdf5-lib hid_t)
+(define-c H5T_NATIVE_UINT_FAST32_g hdf5-lib hid_t)
+(define H5T_NATIVE_INT32 H5T_NATIVE_INT32_g)
+(define H5T_NATIVE_UINT32 H5T_NATIVE_UINT32_g)
+(define H5T_NATIVE_INT_LEAST32 H5T_NATIVE_INT_LEAST32_g)
+(define H5T_NATIVE_UINT_LEAST32 H5T_NATIVE_UINT_LEAST32_g)
+(define H5T_NATIVE_INT_FAST32 H5T_NATIVE_INT_FAST32_g)
+(define H5T_NATIVE_UINT_FAST32 H5T_NATIVE_UINT_FAST32_g)
 
-(define-c+provide H5T_NATIVE_INT64_g hdf5-lib hid_t)
-(define-c+provide H5T_NATIVE_UINT64_g hdf5-lib hid_t)
-(define-c+provide H5T_NATIVE_INT_LEAST64_g hdf5-lib hid_t)
-(define-c+provide H5T_NATIVE_UINT_LEAST64_g hdf5-lib hid_t)
-(define-c+provide H5T_NATIVE_INT_FAST64_g hdf5-lib hid_t)
-(define-c+provide H5T_NATIVE_UINT_FAST64_g hdf5-lib hid_t)
-(define+provide H5T_NATIVE_INT64 H5T_NATIVE_INT64_g)
-(define+provide H5T_NATIVE_UINT64 H5T_NATIVE_UINT64_g)
-(define+provide H5T_NATIVE_INT_LEAST64 H5T_NATIVE_INT_LEAST64_g)
-(define+provide H5T_NATIVE_UINT_LEAST64 H5T_NATIVE_UINT_LEAST64_g)
-(define+provide H5T_NATIVE_INT_FAST64 H5T_NATIVE_INT_FAST64_g)
-(define+provide H5T_NATIVE_UINT_FAST64 H5T_NATIVE_UINT_FAST64_g)
+(define-c H5T_NATIVE_INT64_g hdf5-lib hid_t)
+(define-c H5T_NATIVE_UINT64_g hdf5-lib hid_t)
+(define-c H5T_NATIVE_INT_LEAST64_g hdf5-lib hid_t)
+(define-c H5T_NATIVE_UINT_LEAST64_g hdf5-lib hid_t)
+(define-c H5T_NATIVE_INT_FAST64_g hdf5-lib hid_t)
+(define-c H5T_NATIVE_UINT_FAST64_g hdf5-lib hid_t)
+(define H5T_NATIVE_INT64 H5T_NATIVE_INT64_g)
+(define H5T_NATIVE_UINT64 H5T_NATIVE_UINT64_g)
+(define H5T_NATIVE_INT_LEAST64 H5T_NATIVE_INT_LEAST64_g)
+(define H5T_NATIVE_UINT_LEAST64 H5T_NATIVE_UINT_LEAST64_g)
+(define H5T_NATIVE_INT_FAST64 H5T_NATIVE_INT_FAST64_g)
+(define H5T_NATIVE_UINT_FAST64 H5T_NATIVE_UINT_FAST64_g)
 
 
 

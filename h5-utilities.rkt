@@ -35,7 +35,7 @@
   (syntax-rules ()
     [(_ name body)
      (begin
-       (provide name)
+       ;;(provide name)
        (define-hdf5-lib-internal name body))]))
 
 
@@ -61,8 +61,17 @@
                      [TYPE-tag   (id name "-tag")]
                      [_TYPE/null (id "_" name "/null")])
          #'(begin
-             (provide TYPE-tag)
-             (provide _TYPE)
-             (provide _TYPE/null)
+             ;;(provide TYPE-tag)
+             ;;(provide _TYPE)
+             ;;(provide _TYPE/null)
              (define-cpointer-type _TYPE ptr-type scheme->c c->scheme #:tag the-tag)
              )))]))
+
+(define-syntax typedef
+  (syntax-rules ()
+    [(_ name)
+     (begin
+       ;;(provide name)
+       (define name (_cpointer/null 'name)))]))
+
+(define off_t _long)
