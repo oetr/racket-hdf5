@@ -1,3 +1,8 @@
+* Add to github and to planet
+** Add more examples
+** Add examples with higher abstraction levels
+** Update readme
+
 * Automatic type conversion
 - don't bother with the many types
 - define "standard" types
@@ -6,7 +11,9 @@
 * Provide raw C-API
 - more or less done?
 - need to double check
+
 * Develop high-level API (based on python, c++)
+
 * Add a racketify macro (convert "_" into "-")
 - no need
 
