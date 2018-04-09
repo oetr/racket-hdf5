@@ -40,10 +40,12 @@
 (define-ffi-definer define-hdf5-lib-internal hdf5-lib
   #:default-make-fail make-not-available)
 
+(define (return-#f ) #f)
+
 (define (dynamic-constant name lib type)
   (define name1 (string-append (symbol->string name) "_ID_g"))
   (define name2 (string-append (symbol->string name) "_g"))
-  (define constant1 (get-ffi-obj name1 lib type (lambda () #f)))
+  (define constant1 (get-ffi-obj name1 lib type return-#f))
   (if constant1
       constant1
       (get-ffi-obj name2 lib type (lambda () #f))))

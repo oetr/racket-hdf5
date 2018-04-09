@@ -6,7 +6,7 @@
           "h5apublic.rkt"  ;; Attributes
           "h5acpublic.rkt" ;; Metadata cache
           "h5dpublic.rkt"  ;; Datasets
-          ;;"h5epublic.rkt"  ;; Errors
+          "h5epublic.rkt"  ;; Errors
           "h5fpublic.rkt"  ;; Files
           "h5fdpublic.rkt" ;; File drivers
           "h5gpublic.rkt"  ;; Groups
@@ -29,7 +29,7 @@
           "h5apublic.rkt"  ;; Attributes
           "h5acpublic.rkt" ;; Metadata cache
           "h5dpublic.rkt"  ;; Datasets
-          ;;"h5epublic.rkt"  ;; Errors
+          "h5epublic.rkt"  ;; Errors
           "h5fpublic.rkt"  ;; Files
           "h5fdpublic.rkt" ;; File drivers
           "h5gpublic.rkt"  ;; Groups
@@ -44,5 +44,11 @@
           "h5tpublic.rkt"  ;; Datatypes
           "h5zpublic.rkt"  ;; Data filters
           ))
+
+
+(let ([status (H5Eset_auto1 #f #f)])
+  (when (< status 0)
+    (error 'H5Eset_auto1 "Failed to disable error printing. Status: ~a~n"
+           status)))
 
 

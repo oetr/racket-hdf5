@@ -70,7 +70,15 @@
   (H5Fclose fid))
 
 
-(define a0 (build-array (vector 10000)
+
+(define (make-dataset file-id name type space-id lcpl-id dcpl-id dapl-id)
+  ;; open and check whether it exists already
+  (define status (H5Dopen2 file-id name dapl-id))
+  (if (>= status 0)
+      status
+      (H5Dcreate2 file-id name type space-id lcpl-id dcpl-id dapl-id)))
+
+(define a0 (build-array (vector 1000)
                         (lambda (indices) 
                           (for/fold ([sum 1]) ([i indices])
                             (+ sum i)))))
@@ -79,12 +87,14 @@
 (define raw-data (array->cblock a0 _int))
 
 
-(define fid (make-h5file "./test.h5"))
+(define fid (make-h5file (expand-user-path "~/test.h5")))
+
+
 (define dataspace-id (H5Screate_simple (sequence-length dims)
                                        dims
                                        #f))
 
-(define dset-id (H5Dcreate2 fid "my dataset" H5T_STD_I32LE
+(define dset-id (make-dataset fid "my dataset" H5T_STD_I64LE
                             dataspace-id H5P_DEFAULT
                             H5P_DEFAULT H5P_DEFAULT))
 
@@ -93,3 +103,7 @@
 (H5Dclose dset-id)
 (H5Sclose dataspace-id)
 (H5Fclose fid)
+
+
+;;(require racket/math)
+;;(array->cblock)

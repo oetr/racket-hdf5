@@ -231,10 +231,11 @@
         -> herr_t))
 
 (define-hdf5 H5Gget_objinfo
-  (_fun (loc_id : hid_t)
+  (_fun (loc_id name follow_link statbuf) ::
+        (loc_id : hid_t)
         (name : _string)
-        (follow_link : hbool_t)
-        (statbuf : _H5G_stat_t-pointer)
+        (follow_link : hbool_t = (if follow_link 1 0))
+        (statbuf : _H5G_stat_t-pointer/null)
         -> herr_t))
 
 (define-hdf5 H5Gget_objname_by_idx
