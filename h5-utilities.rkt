@@ -1,7 +1,8 @@
 #lang racket
 
 (require ffi/unsafe
-         ffi/unsafe/define)
+         ffi/unsafe/define
+         setup/dirs)
 
 (provide (all-defined-out))
 
@@ -26,10 +27,26 @@
      (begin (provide name)
             (define-c name args ...))]))
 
+(define hdf5-directories
+  (list "/usr/lib/x86_64-linux-gnu/hdf5/openmpi/"
+        "/usr/lib/x86_64-linux-gnu/"
+        "/usr/lib/x86_64-linux-gnu/hdf5/serial/"
+        ))
 
-(define hdf5-lib (ffi-lib "libhdf5_serial"))
+(define hdf5-lib (ffi-lib "libhdf5"
+                          #:get-lib-dirs
+                          (lambda () hdf5-directories )))
 
-(define-ffi-definer define-hdf5-lib-internal hdf5-lib)
+(define-ffi-definer define-hdf5-lib-internal hdf5-lib
+  #:default-make-fail make-not-available)
+
+(define (dynamic-constant name lib type)
+  (define name1 (string-append (symbol->string name) "_ID_g"))
+  (define name2 (string-append (symbol->string name) "_g"))
+  (define constant1 (get-ffi-obj name1 lib type (lambda () #f)))
+  (if constant1
+      constant1
+      (get-ffi-obj name2 lib type (lambda () #f))))
 
 (define-syntax define-hdf5
   (syntax-rules ()
@@ -39,7 +56,7 @@
        (define-hdf5-lib-internal name body))]))
 
 
-(provide define-cpointer-type+provide)
+
 (define-syntax (define-cpointer-type+provide stx)
   (syntax-case stx ()
     [(_ _TYPE) #'(define-cpointer-type+provide _TYPE #f #f #f #:tag #f)]

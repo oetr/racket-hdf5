@@ -9,7 +9,7 @@
           ;;"h5epublic.rkt"  ;; Errors
           "h5fpublic.rkt"  ;; Files
           "h5fdpublic.rkt" ;; File drivers
-          ;;"h5gpublic.rkt"  ;; Groups
+          "h5gpublic.rkt"  ;; Groups
           "h5ipublic.rkt"  ;; ID management
           "h5lpublic.rkt"  ;; Links
           "h5mmpublic.rkt" ;; Memory management
@@ -32,7 +32,7 @@
           ;;"h5epublic.rkt"  ;; Errors
           "h5fpublic.rkt"  ;; Files
           "h5fdpublic.rkt" ;; File drivers
-          ;;"h5gpublic.rkt"  ;; Groups
+          "h5gpublic.rkt"  ;; Groups
           "h5ipublic.rkt"  ;; ID management
           "h5lpublic.rkt"  ;; Links
           "h5mmpublic.rkt" ;; Memory management

@@ -8,9 +8,9 @@
 
 (provide (all-defined-out))
 
-(define+provide hsize_t _ulong)
-(define+provide hssize_t _long)
-(define+provide haddr_t _ulong)
+(define hsize_t _ulong)
+(define hssize_t _long)
+(define haddr_t _ulong)
 
 #|
  * Status return values.  Failed integer functions in HDF5 result almost
@@ -22,10 +22,10 @@
  * 	if((dset = H5Dopen2(file, name)) < 0)
  *	    fprintf(stderr, "unable to open the requested dataset\n");
 |#
-(define+provide herr_t _int)
+(define herr_t _int)
 
 ;; Type of atoms to return to users
-(define+provide hid_t _int)
+(define hid_t _int)
 
 
 #|
@@ -43,12 +43,12 @@
  * 	    printf("error determining whether data type is committed\n");
  *	}
 |#
-(define+provide hbool_t _uint)
-(define+provide htri_t _int)
+(define hbool_t _uint)
+(define htri_t _int)
 
 
 ;; Common iteration orders
-(define+provide H5_iter_order_t
+(define H5_iter_order_t
   (_enum '(
            H5_ITER_UNKNOWN = -1 ;; Unknown order
            H5_ITER_INC          ;; Increasing order
@@ -60,9 +60,9 @@
 #| (Actually, any postive value will cause the iterator to stop and pass back
  *      that positive value to the function that called the iterator)
  |#
-(define+provide H5_ITER_ERROR -1)
-(define+provide H5_ITER_CONT   0)
-(define+provide H5_ITER_STOP   1)
+(define H5_ITER_ERROR -1)
+(define H5_ITER_CONT   0)
+(define H5_ITER_STOP   1)
 
 
 
@@ -71,7 +71,7 @@
  * Primarily used for "<do> <foo> by index" routines and for iterating over
  * links in groups/attributes on objects.
 |#
-(define+provide H5_index_t
+(define H5_index_t
   (_enum '(
     H5_INDEX_UNKNOWN = -1 ;; Unknown index type
     H5_INDEX_NAME         ;; Index on names
@@ -150,8 +150,6 @@
         [is_ts : (_ptr o hbool_t)]
         -> (status : herr_t)
         -> (= is_ts 1)))
-
-
 
 (define-hdf5 H5allocate_memory
   (_fun (size clear) ::

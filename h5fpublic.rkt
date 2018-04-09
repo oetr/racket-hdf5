@@ -24,39 +24,39 @@
 * H5F_ACC_DEBUG no longer has any prints any special debug info. The symbol is
 * being retained and will be listed as deprecated in HDF5 1.10.0.
 |#
-(define+provide H5F_ACC_RDONLY #x0000) ;; absence of rdwr => rd-only
-(define+provide H5F_ACC_RDWR   #x0001) ;; open for read and write
-(define+provide H5F_ACC_TRUNC  #x0002) ;; overwrite existing files
-(define+provide H5F_ACC_EXCL   #x0004) ;; fail if file already exists
-(define+provide H5F_ACC_DEBUG  #x0000) ;; print debug info (no longer used)
-(define+provide H5F_ACC_CREAT  #x0010) ;; create non-existing files
+(define H5F_ACC_RDONLY #x0000) ;; absence of rdwr => rd-only
+(define H5F_ACC_RDWR   #x0001) ;; open for read and write
+(define H5F_ACC_TRUNC  #x0002) ;; overwrite existing files
+(define H5F_ACC_EXCL   #x0004) ;; fail if file already exists
+(define H5F_ACC_DEBUG  #x0000) ;; print debug info (no longer used)
+(define H5F_ACC_CREAT  #x0010) ;; create non-existing files
 
 
 
 #| Value passed to H5Pset_elink_acc_flags to cause flags to be taken from the
 * parent file. |#
-(define+provide H5F_ACC_DEFAULT #xffff)	;;ignore setting on lapl     */
+(define H5F_ACC_DEFAULT #xffff)	;;ignore setting on lapl     */
 
 ;; Flags for H5Fget_obj_count() & H5Fget_obj_ids() calls */
-(define+provide H5F_OBJ_FILE	#x0001)       ;; File objects */
-(define+provide H5F_OBJ_DATASET	#x0002)       ;; Dataset objects */
-(define+provide H5F_OBJ_GROUP	#x0004)       ;; Group objects */
-(define+provide H5F_OBJ_DATATYPE #x0008)      ;; Named datatype objects */
-(define+provide H5F_OBJ_ATTR    #x0010)       ;; Attribute objects */
-(define+provide H5F_OBJ_ALL (bitwise-ior H5F_OBJ_FILE H5F_OBJ_DATASET H5F_OBJ_GROUP H5F_OBJ_DATATYPE H5F_OBJ_ATTR))
-(define+provide H5F_OBJ_LOCAL #x0020)       ;; Restrict search to objects opened through current file ID */
+(define H5F_OBJ_FILE	#x0001)       ;; File objects */
+(define H5F_OBJ_DATASET	#x0002)       ;; Dataset objects */
+(define H5F_OBJ_GROUP	#x0004)       ;; Group objects */
+(define H5F_OBJ_DATATYPE #x0008)      ;; Named datatype objects */
+(define H5F_OBJ_ATTR    #x0010)       ;; Attribute objects */
+(define H5F_OBJ_ALL (bitwise-ior H5F_OBJ_FILE H5F_OBJ_DATASET H5F_OBJ_GROUP H5F_OBJ_DATATYPE H5F_OBJ_ATTR))
+(define H5F_OBJ_LOCAL #x0020)       ;; Restrict search to objects opened through current file ID */
 ;; (as opposed to objects opened through any file ID accessing this file) */
 
-(define+provide H5F_FAMILY_DEFAULT 0)
+(define H5F_FAMILY_DEFAULT 0)
 
 ;; The difference between a single file and a set of mounted files
-(define+provide H5F_scope_t
+(define H5F_scope_t
   (_enum '(
            H5F_SCOPE_LOCAL	= 0     ;; specified file handle only
            H5F_SCOPE_GLOBAL	= 1))) 	;; entire virtual file
 
 ;; Unlimited file size for H5Pset_external()
-(define+provide H5F_UNLIMITED (cast -1 _int64 hsize_t))
+(define H5F_UNLIMITED (cast -1 _int64 hsize_t))
 
 #| How does file close behave?
  * H5F_CLOSE_DEFAULT - Use the degree pre-defined by underlining VFL
@@ -66,7 +66,7 @@
  * H5F_CLOSE_STRONG  - if there are opened objects, close them first, then
 		       close file
 |#
-(define+provide H5F_close_degree_t
+(define H5F_close_degree_t
   (_enum '(
            H5F_CLOSE_DEFAULT   = 0
            H5F_CLOSE_WEAK      = 1
@@ -91,7 +91,7 @@
  * Note: please change the log VFD flavors array if you change this
  * enumeration.
 |#
-(define+provide H5F_mem_t
+(define H5F_mem_t
   (_enum
    '(
      H5FD_MEM_NOLIST     = -1   #| Data should not appear in the free list.
@@ -111,11 +111,11 @@
      H5FD_MEM_NTYPES             ;; Sentinel value - must be last
      )))
 
-(define+provide H5FD_MEM_NTYPES 7)
+(define H5FD_MEM_NTYPES 7)
 
 
 ;; Library's file format versions
-(define+provide H5F_libver_t
+(define H5F_libver_t
   (_enum
    '(
      H5F_LIBVER_EARLIEST ;; Use the earliest possible format for storing objects
@@ -123,7 +123,7 @@
      )))
 #| Define file format version for 1.8 to prepare for 1.10 release.  
  * (Not used anywhere now)|#
-(define+provide H5F_LIBVER_18 'H5F_LIBVER_LATEST)
+(define H5F_LIBVER_18 'H5F_LIBVER_LATEST)
 
 
 ;; Functions in H5F.c

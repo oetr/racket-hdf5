@@ -7,7 +7,6 @@
          rackunit
          "h5-utilities.rkt"
          "h5public.rkt"
-         
          "h5acpublic.rkt"
          "h5dpublic.rkt"
          "h5fpublic.rkt"
@@ -17,20 +16,7 @@
          "h5opublic.rkt"
          "h5mmpublic.rkt"
          "h5tpublic.rkt"
-         "h5zpublic.rkt"
-         )
-
-;; #include "H5public.h"
-;; #include "H5ACpublic.h"
-;; #include "H5Dpublic.h"
-;; #include "H5Fpublic.h"
-;; #include "H5FDpublic.h"
-;; #include "H5Ipublic.h"
-;; #include "H5Lpublic.h"
-;; #include "H5Opublic.h"
-;; #include "H5MMpublic.h"
-;; #include "H5Tpublic.h"
-;; #include "H5Zpublic.h"
+         "h5zpublic.rkt")
 
 (provide (all-defined-out))
 
@@ -38,42 +24,42 @@
 * The library's property list classes
 |#
 
-(define H5P_ROOT (get-ffi-obj 'H5P_CLS_ROOT_ID_g hdf5-lib hid_t))
-(define H5P_OBJECT_CREATE (get-ffi-obj 'H5P_CLS_OBJECT_CREATE_ID_g hdf5-lib hid_t))
-(define H5P_FILE_CREATE (get-ffi-obj 'H5P_CLS_FILE_CREATE_ID_g hdf5-lib hid_t))
-(define H5P_FILE_ACCESS (get-ffi-obj 'H5P_CLS_FILE_ACCESS_ID_g hdf5-lib hid_t))
-(define H5P_DATASET_CREATE (get-ffi-obj 'H5P_CLS_DATASET_CREATE_ID_g hdf5-lib hid_t))
-(define H5P_DATASET_ACCESS (get-ffi-obj 'H5P_CLS_DATASET_ACCESS_ID_g hdf5-lib hid_t))
-(define H5P_DATASET_XFER (get-ffi-obj 'H5P_CLS_DATASET_XFER_ID_g hdf5-lib hid_t))
-(define H5P_FILE_MOUNT (get-ffi-obj 'H5P_CLS_FILE_MOUNT_ID_g hdf5-lib hid_t))
-(define H5P_GROUP_CREATE (get-ffi-obj 'H5P_CLS_GROUP_CREATE_ID_g hdf5-lib hid_t))
-(define H5P_GROUP_ACCESS (get-ffi-obj 'H5P_CLS_GROUP_ACCESS_ID_g hdf5-lib hid_t))
-(define H5P_DATATYPE_CREATE (get-ffi-obj 'H5P_CLS_DATATYPE_CREATE_ID_g hdf5-lib hid_t))
-(define H5P_DATATYPE_ACCESS (get-ffi-obj 'H5P_CLS_DATATYPE_ACCESS_ID_g hdf5-lib hid_t))
-(define H5P_STRING_CREATE (get-ffi-obj 'H5P_CLS_STRING_CREATE_ID_g hdf5-lib hid_t))
-(define H5P_ATTRIBUTE_CREATE (get-ffi-obj 'H5P_CLS_ATTRIBUTE_CREATE_ID_g hdf5-lib hid_t))
-(define H5P_OBJECT_COPY (get-ffi-obj 'H5P_CLS_OBJECT_COPY_ID_g hdf5-lib hid_t))
-(define H5P_LINK_CREATE (get-ffi-obj 'H5P_CLS_LINK_CREATE_ID_g hdf5-lib hid_t))
-(define H5P_LINK_ACCESS (get-ffi-obj 'H5P_CLS_LINK_ACCESS_ID_g hdf5-lib hid_t))
+(define H5P_ROOT (dynamic-constant 'H5P_CLS_ROOT hdf5-lib hid_t))
+(define H5P_OBJECT_CREATE (dynamic-constant 'H5P_CLS_OBJECT_CREATE hdf5-lib hid_t))
+(define H5P_FILE_CREATE (dynamic-constant 'H5P_CLS_FILE_CREATE hdf5-lib hid_t))
+(define H5P_FILE_ACCESS (dynamic-constant 'H5P_CLS_FILE_ACCESS hdf5-lib hid_t))
+(define H5P_DATASET_CREATE (dynamic-constant 'H5P_CLS_DATASET_CREATE hdf5-lib hid_t))
+(define H5P_DATASET_ACCESS (dynamic-constant 'H5P_CLS_DATASET_ACCESS hdf5-lib hid_t))
+(define H5P_DATASET_XFER (dynamic-constant 'H5P_CLS_DATASET_XFER hdf5-lib hid_t))
+(define H5P_FILE_MOUNT (dynamic-constant 'H5P_CLS_FILE_MOUNT hdf5-lib hid_t))
+(define H5P_GROUP_CREATE (dynamic-constant 'H5P_CLS_GROUP_CREATE hdf5-lib hid_t))
+(define H5P_GROUP_ACCESS (dynamic-constant 'H5P_CLS_GROUP_ACCESS hdf5-lib hid_t))
+(define H5P_DATATYPE_CREATE (dynamic-constant 'H5P_CLS_DATATYPE_CREATE hdf5-lib hid_t))
+(define H5P_DATATYPE_ACCESS (dynamic-constant 'H5P_CLS_DATATYPE_ACCESS hdf5-lib hid_t))
+(define H5P_STRING_CREATE (dynamic-constant 'H5P_CLS_STRING_CREATE hdf5-lib hid_t))
+(define H5P_ATTRIBUTE_CREATE (dynamic-constant 'H5P_CLS_ATTRIBUTE_CREATE hdf5-lib hid_t))
+(define H5P_OBJECT_COPY (dynamic-constant 'H5P_CLS_OBJECT_COPY hdf5-lib hid_t))
+(define H5P_LINK_CREATE (dynamic-constant 'H5P_CLS_LINK_CREATE hdf5-lib hid_t))
+(define H5P_LINK_ACCESS (dynamic-constant 'H5P_CLS_LINK_ACCESS hdf5-lib hid_t))
 
 
 #|
 * The library's default property lists
 |#
-(define H5P_FILE_CREATE_DEFAULT (get-ffi-obj 'H5P_LST_FILE_CREATE_ID_g hdf5-lib hid_t))
-(define H5P_FILE_ACCESS_DEFAULT (get-ffi-obj 'H5P_LST_FILE_ACCESS_ID_g hdf5-lib hid_t))
-(define H5P_DATASET_CREATE_DEFAULT (get-ffi-obj 'H5P_LST_DATASET_CREATE_ID_g hdf5-lib hid_t))
-(define H5P_DATASET_ACCESS_DEFAULT (get-ffi-obj 'H5P_LST_DATASET_ACCESS_ID_g hdf5-lib hid_t))
-(define H5P_DATASET_XFER_DEFAULT (get-ffi-obj 'H5P_LST_DATASET_XFER_ID_g hdf5-lib hid_t))
-(define H5P_FILE_MOUNT_DEFAULT (get-ffi-obj 'H5P_LST_FILE_MOUNT_ID_g hdf5-lib hid_t))
-(define H5P_GROUP_CREATE_DEFAULT (get-ffi-obj 'H5P_LST_GROUP_CREATE_ID_g hdf5-lib hid_t))
-(define H5P_GROUP_ACCESS_DEFAULT (get-ffi-obj 'H5P_LST_GROUP_ACCESS_ID_g hdf5-lib hid_t))
-(define H5P_DATATYPE_CREATE_DEFAULT (get-ffi-obj 'H5P_LST_DATATYPE_CREATE_ID_g hdf5-lib hid_t))
-(define H5P_DATATYPE_ACCESS_DEFAULT (get-ffi-obj 'H5P_LST_DATATYPE_ACCESS_ID_g hdf5-lib hid_t))
-(define H5P_ATTRIBUTE_CREATE_DEFAULT (get-ffi-obj 'H5P_LST_ATTRIBUTE_CREATE_ID_g hdf5-lib hid_t))
-(define H5P_OBJECT_COPY_DEFAULT (get-ffi-obj 'H5P_LST_OBJECT_COPY_ID_g hdf5-lib hid_t))
-(define H5P_LINK_CREATE_DEFAULT (get-ffi-obj 'H5P_LST_LINK_CREATE_ID_g hdf5-lib hid_t))
-(define H5P_LINK_ACCESS_DEFAULT (get-ffi-obj 'H5P_LST_LINK_ACCESS_ID_g hdf5-lib hid_t))
+(define H5P_FILE_CREATE_DEFAULT (dynamic-constant 'H5P_LST_FILE_CREATE hdf5-lib hid_t))
+(define H5P_FILE_ACCESS_DEFAULT (dynamic-constant 'H5P_LST_FILE_ACCESS hdf5-lib hid_t))
+(define H5P_DATASET_CREATE_DEFAULT (dynamic-constant 'H5P_LST_DATASET_CREATE hdf5-lib hid_t))
+(define H5P_DATASET_ACCESS_DEFAULT (dynamic-constant 'H5P_LST_DATASET_ACCESS hdf5-lib hid_t))
+(define H5P_DATASET_XFER_DEFAULT (dynamic-constant 'H5P_LST_DATASET_XFER hdf5-lib hid_t))
+(define H5P_FILE_MOUNT_DEFAULT (dynamic-constant 'H5P_LST_FILE_MOUNT hdf5-lib hid_t))
+(define H5P_GROUP_CREATE_DEFAULT (dynamic-constant 'H5P_LST_GROUP_CREATE hdf5-lib hid_t))
+(define H5P_GROUP_ACCESS_DEFAULT (dynamic-constant 'H5P_LST_GROUP_ACCESS hdf5-lib hid_t))
+(define H5P_DATATYPE_CREATE_DEFAULT (dynamic-constant 'H5P_LST_DATATYPE_CREATE hdf5-lib hid_t))
+(define H5P_DATATYPE_ACCESS_DEFAULT (dynamic-constant 'H5P_LST_DATATYPE_ACCESS hdf5-lib hid_t))
+(define H5P_ATTRIBUTE_CREATE_DEFAULT (dynamic-constant 'H5P_LST_ATTRIBUTE_CREATE hdf5-lib hid_t))
+(define H5P_OBJECT_COPY_DEFAULT (dynamic-constant 'H5P_LST_OBJECT_COPY hdf5-lib hid_t))
+(define H5P_LINK_CREATE_DEFAULT (dynamic-constant 'H5P_LST_LINK_CREATE hdf5-lib hid_t))
+(define H5P_LINK_ACCESS_DEFAULT (dynamic-constant 'H5P_LST_LINK_ACCESS hdf5-lib hid_t))
 
 
 ;; Common creation order flags (for links in groups and attributes on objects)
@@ -122,7 +108,7 @@
 
 (define H5P_prp_create_func_t H5P_prp_cb1_t)
 (define H5P_prp_set_func_t H5P_prp_cb2_t)
-(define H5P_prp_get_func_t H5P_prp_cb2_t )
+(define H5P_prp_get_func_t H5P_prp_cb2_t)
 (define H5P_prp_delete_func_t H5P_prp_cb2_t)
 (define H5P_prp_copy_func_t H5P_prp_cb1_t)
 
@@ -155,7 +141,7 @@
      H5D_MPIO_NO_CHUNK_OPTIMIZATION = 0
      H5D_MPIO_LINK_CHUNK
      H5D_MPIO_MULTI_CHUNK
-     )))
+    )))
 
 (define H5D_mpio_actual_io_mode_t
   (_enum
@@ -176,7 +162,7 @@
      H5D_MPIO_CHUNK_MIXED = ,(bitwise-ior #x1 #x2)
      ;; The contiguous case is separate from the bit field.
      H5D_MPIO_CONTIGUOUS_COLLECTIVE = #x4
-     )))
+    )))
 
 ;; Broken collective IO property
 (define H5D_mpio_no_collective_cause_t
@@ -190,7 +176,7 @@
      H5D_MPIO_NOT_SIMPLE_OR_SCALAR_DATASPACES = #x10
      H5D_MPIO_NOT_CONTIGUOUS_OR_CHUNKED_DATASET = #x20
      H5D_MPIO_FILTERS = #x40
-     )))
+    )))
 
 
 
@@ -726,7 +712,7 @@
         (idx : _uint)
         (name_size : _size)
         (name : _string) ;; TODO: out
-        (offset : _pointer ) ;;TODO: out off_t
+        (offset : _pointer) ;;TODO: out off_t
         (size : _pointer) ;; TODO: out hsize_t
         -> herr_t))
 
@@ -903,21 +889,21 @@
         (operate_data : _pointer)
         -> herr_t))
 
-;; #ifdef H5_HAVE_PARALLEL
-;; (define-hdf5 H5Pget_mpio_actual_chunk_opt_mode
-;;   (_fun (plist_id : hid_t)
-;;         (actual_chunk_opt_mode : H5D_mpio_actual_chunk_opt_mode_t)
-;;         -> herr_t))
-;; (define-hdf5 H5Pget_mpio_actual_io_mode
-;;   (_fun (plist_id : hid_t)
-;;         (actual_io_mode : H5D_mpio_actual_io_mode_t)
-;;         -> herr_t))
-;; (define-hdf5 H5Pget_mpio_no_collective_cause
-;;   (_fun (plist_id : hid_t)
-;;         (local_no_collective_cause : _pointer)
-;;         (global_no_collective_cause : _pointer)
-;;         -> herr_t))
-;; #endif H5_HAVE_PARALLEL
+ (define-hdf5 H5Pget_mpio_actual_chunk_opt_mode
+   (_fun (plist_id : hid_t)
+         (actual_chunk_opt_mode : H5D_mpio_actual_chunk_opt_mode_t)
+         -> herr_t))
+
+ (define-hdf5 H5Pget_mpio_actual_io_mode
+   (_fun (plist_id : hid_t)
+         (actual_io_mode : H5D_mpio_actual_io_mode_t)
+         -> herr_t))
+
+ (define-hdf5 H5Pget_mpio_no_collective_cause
+   (_fun (plist_id : hid_t)
+         (local_no_collective_cause : _pointer)
+         (global_no_collective_cause : _pointer)
+         -> herr_t))
 
 #| Link creation property list (LCPL) routines |#
 (define-hdf5 H5Pset_create_intermediate_group
