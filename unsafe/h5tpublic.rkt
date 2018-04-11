@@ -620,11 +620,13 @@
         -> herr_t))
 
 (define-hdf5 H5Tenum_nameof
-  (_fun (type : hid_t)
+  (_fun (type value size) ::
+        (type : hid_t)
         (value : _pointer)
-        (name : _string) ;; TODO: out
+        (name : _pointer = (malloc _string size))
         (size : _size)
-        -> herr_t))
+        -> (status : herr_t)
+        -> (list status (cast name _pointer _string))))
 
 (define-hdf5 H5Tenum_valueof
   (_fun (type : hid_t)

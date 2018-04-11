@@ -125,6 +125,8 @@
         (dapl_id : hid_t)
         -> hid_t))
 
+(define H5Dopen H5Dopen2)
+
 (define-hdf5 H5Dclose
   (_fun (dset_id : hid_t)
         -> herr_t))
@@ -194,11 +196,13 @@
         -> herr_t))
 
 (define-hdf5 H5Dvlen_get_buf_size
-  (_fun (dataset_id : hid_t)
+  (_fun (dataset_id type_id space_id) ::
+        (dataset_id : hid_t)
         (type_id : hid_t)
         (space_id : hid_t)
-        (size : _pointer)
-        -> herr_t))
+        (size : _pointer = (malloc hsize_t 1 'atomic))
+        -> (status : herr_t)
+        -> (list status (ptr-ref size hsize_t))))
 
 (define-hdf5 H5Dfill
   (_fun (fill : (_ptr i _void))
