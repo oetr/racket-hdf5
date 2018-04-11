@@ -5,8 +5,7 @@
          ffi/winapi
          rackunit)
 
-(require "../hdf5.rkt")
-
+(require "../unsafe/hdf5.rkt")
 
 #|
 * Define operator data structure type for H5Literate callback.
@@ -101,7 +100,7 @@ otherwise.
 ;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Main
 ;;;;;;;;;;;;;;;;;;;;;;;;
-(define filename "/home/petr/test.h5")
+(define filename (expand-user-path "./data/h5ex_g_traverse.h5"))
 ;;(define filename "./data/h5ex_g_traverse.h5")
 
 (define f (H5Fopen filename H5F_ACC_RDONLY H5P_DEFAULT))

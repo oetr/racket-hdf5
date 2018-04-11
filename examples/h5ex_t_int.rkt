@@ -14,9 +14,9 @@ This file is intended for use with HDF5 Library version 1.8
          ffi/winapi
          rackunit)
 
-(require "../hdf5.rkt")
+(require "../unsafe/hdf5.rkt")
 
-(define FILE    "data/h5ex_t_int.h5")
+(define FILE    "./data/h5ex_t_int.h5")
 (define DATASET "DS1")
 (define DIM0    4)
 (define DIM1    7)
@@ -28,25 +28,25 @@ This file is intended for use with HDF5 Library version 1.8
                             [j DIM1])
                   (- (* i j) j)))
 
-  (define file (H5Fcreate FILE H5F_ACC_TRUNC H5P_DEFAULT H5P_DEFAULT))
+  (define fid (H5Fcreate FILE H5F_ACC_TRUNC H5P_DEFAULT H5P_DEFAULT))
 
   (define space (H5Screate_simple 2 dims #f))
-  (define dset (H5Dcreate2 file DATASET H5T_STD_I64BE space H5P_DEFAULT
+  (define dset (H5Dcreate2 fid DATASET H5T_STD_I64BE space H5P_DEFAULT
                            H5P_DEFAULT H5P_DEFAULT))
   (set! status (H5Dwrite dset H5T_NATIVE_INT H5S_ALL H5S_ALL H5P_DEFAULT
                          (list->cblock wdata _int)))
 
   (set! status (H5Dclose dset))
   (set! status (H5Sclose space))
-  (set! status (H5Fclose file)))
+  (set! status (H5Fclose fid)))
 
 
 (when #t
   (define dims (list DIM0 DIM1))
 
 
-  (define file (H5Fopen FILE H5F_ACC_RDONLY H5P_DEFAULT))
-  (define dset (H5Dopen2 file DATASET H5P_DEFAULT))
+  (define fid (H5Fopen FILE H5F_ACC_RDONLY H5P_DEFAULT))
+  (define dset (H5Dopen2 fid DATASET H5P_DEFAULT))
 
   #|
   * Get dataspace and allocate memory for read buffer.  This is a
@@ -68,4 +68,4 @@ This file is intended for use with HDF5 Library version 1.8
 
   (H5Dclose dset)
   (H5Sclose space)
-  (H5Fclose file))
+  (H5Fclose fid))

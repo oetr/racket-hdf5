@@ -5,7 +5,7 @@
          ffi/winapi
          rackunit)
 
-(require "../hdf5.rkt")
+(require "../unsafe/hdf5.rkt")
 
 
 #|
@@ -98,7 +98,7 @@
         [else (group-check (opdata-*prev od) target_addr)]))
 
 
-(define filename "./data/h5ex_g_iterate.h5")
+(define filename (expand-user-path "./data/h5ex_g_iterate.h5"))
 
 (define f (H5Fopen filename H5F_ACC_RDONLY H5P_DEFAULT))
 
@@ -121,6 +121,7 @@
 (H5O_info_t-hdr infobuf)
 (H5_ih_info_t-index (car (H5O_info_t-meta_size infobuf)))
 
-(printf "/ {\n")
+(printf "{\n")
 (define status (H5Literate f 'H5_INDEX_NAME 'H5_ITER_NATIVE #f op_func
-                od))
+                           od))
+(printf "}\n")
