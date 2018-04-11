@@ -2,7 +2,7 @@
 
 (require math/array)
 (require racket)
-(require "hdf5.rkt"
+(require "./unsafe/hdf5.rkt"
          (only-in ffi/unsafe _int))
 
 ;; Creates or opens an HDF5 file.
@@ -74,14 +74,19 @@
 (define (make-dataset file-id name type space-id lcpl-id dcpl-id dapl-id)
   ;; open and check whether it exists already
   (define status (H5Dopen2 file-id name dapl-id))
+
+  ;; extend
   (if (>= status 0)
-      status
+      (begin
+        (printf "Opening existing dataset: ~s~n" name)
+        status)
       (H5Dcreate2 file-id name type space-id lcpl-id dcpl-id dapl-id)))
+
 
 (define a0 (build-array (vector 1000)
                         (lambda (indices) 
                           (for/fold ([sum 1]) ([i indices])
-                            (+ sum i)))))
+                            (+ sum i (* i (random 100)))))))
 (define dims (array-shape a0))
 
 (define raw-data (array->cblock a0 _int))
@@ -94,15 +99,15 @@
                                        dims
                                        #f))
 
-(define dset-id (make-dataset fid "my dataset" H5T_STD_I64LE
-                            dataspace-id H5P_DEFAULT
-                            H5P_DEFAULT H5P_DEFAULT))
+ (define dset-id (make-dataset fid "my dataset" H5T_STD_I64LE
+                             dataspace-id H5P_DEFAULT
+                             H5P_DEFAULT H5P_DEFAULT))
 
-(H5Dwrite dset-id H5T_NATIVE_INT H5S_ALL H5S_ALL H5P_DEFAULT raw-data)
+ (H5Dwrite dset-id H5T_NATIVE_INT H5S_ALL H5S_ALL H5P_DEFAULT raw-data)
 
-(H5Dclose dset-id)
-(H5Sclose dataspace-id)
-(H5Fclose fid)
+ (H5Dclose dset-id)
+ (H5Sclose dataspace-id)
+ (H5Fclose fid)
 
 
 ;;(require racket/math)
