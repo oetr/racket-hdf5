@@ -7,8 +7,11 @@
 !*.org
 
 # files
-!tests/
-
+!examples/
+!examples/data/
 
 # source code
 !*.rkt
+
+# example data
+!*.h5
