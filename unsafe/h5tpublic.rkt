@@ -560,12 +560,16 @@
         (tapl_id : hid_t)
         -> herr_t))
 
+(define H5Tcommit H5Tcommit2)
+
 
 (define-hdf5 H5Topen2
   (_fun (loc_id : hid_t)
         (name : _string)
         (tapl_id : hid_t)
         -> hid_t))
+
+(define H5Topen H5Topen2)
 
 (define-hdf5 H5Tcommit_anon
   (_fun (loc_id : hid_t)
@@ -735,7 +739,8 @@
 (define-hdf5 H5Tget_member_name
   (_fun (type_id : hid_t)
         (membno : _uint)
-        -> _pointer)) ;; TODO char->string?
+        -> (name : _bytes)
+        -> (~a name))) ;; TODO char->string?
 
 (define-hdf5 H5Tget_member_index
   (_fun (type_id : hid_t)
