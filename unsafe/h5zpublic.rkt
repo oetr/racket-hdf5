@@ -172,12 +172,19 @@
 
 (define-hdf5 H5Zfilter_avail
   (_fun (id : H5Z_filter_t)
-        -> htri_t))
-
+        -> (status : htri_t)
+        -> (cond [(> status 0) #t]
+                 [(= status 0) #f]
+                 [else (error 'H5Zfilter_avail "Failed to check filter availability for id: ~a\n"
+                              id)])))
+        
 (define-hdf5 H5Zget_filter_info
   (_fun (filter : H5Z_filter_t)
-        (filter_config_flags : _pointer)
-        -> herr_t))
+        (filter_config_flags : (_ptr o _uint))
+        -> (status : herr_t)
+        -> (if (< status 0)
+               (error 'H5Zget_filter_info "Failed to get filter info, for filter ~a~n" filter)
+               filter_config_flags)))
 
 #|
  * The filter table maps filter identification numbers to structs that

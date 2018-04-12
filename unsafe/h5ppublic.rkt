@@ -366,15 +366,23 @@
         -> _int))
 
 (define-hdf5 H5Pget_filter2
-  (_fun (plist_id : hid_t)
+  (_fun (plist_id filter cd_nelmts namelen) ::
+        (plist_id : hid_t)
         (filter : _uint)
-        (flagsout : _uint) ;; TODO: out
-        (cd_nelmts : _size) ;; TODO out
-        (cd_values : _uint) ;;TODO
+        (flagsout : (_ptr o _uint))
+        (cd_nelmts : (_ptr io _size)) ;; inout
+        (cd_values : (_ptr o _uint)) ;; TODO
         (namelen : _size)
-        (name : _string)
-        (filter_config : _pointer)
-        -> H5Z_filter_t)) ;; out
+        (name : (_bytes o namelen))
+        (filter_config : (_ptr o _uint))
+        -> (filter : H5Z_filter_t)
+        -> (list (list 'filter filter)
+                 (list 'flags flagsout)
+                 (list 'cd-values cd_values)
+                 (list 'name name)
+                 (list 'filter-config filter_config))))
+
+(define H5Pget_filter H5Pget_filter2)
 
 (define-hdf5 H5Pget_filter_by_id2
   (_fun (plist_id : hid_t)
@@ -721,7 +729,9 @@
   (_fun (plist_id : hid_t)
         (options_mask : _uint)
         (pixels_per_block : _uint)
-        -> herr_t))
+        -> (status : herr_t)
+        -> (when (< status 0)
+             (error 'H5Pset_szip "Unable to set szip compression.\n"))))
 
 (define-hdf5 H5Pset_shuffle
   (_fun (plist_id : hid_t)

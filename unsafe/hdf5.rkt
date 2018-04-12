@@ -16,7 +16,7 @@
           "h5opublic.rkt"  ;; Object headers
           "h5ppublic.rkt"  ;; Property lists
           ;;"h5plpublic.rkt" ;; Plugins
-          ;;"h5rpublic.rkt"  ;; References
+          "h5rpublic.rkt"  ;; References
           "h5spublic.rkt"  ;; Dataspaces
           "h5tpublic.rkt"  ;; Datatypes
           "h5zpublic.rkt"  ;; Data filters
@@ -39,7 +39,7 @@
           "h5opublic.rkt"  ;; Object headers
           "h5ppublic.rkt"  ;; Property lists
           ;;"h5plpublic.rkt" ;; Plugins
-          ;;"h5rpublic.rkt"  ;; References
+          "h5rpublic.rkt"  ;; References
           "h5spublic.rkt"  ;; Dataspaces
           "h5tpublic.rkt"  ;; Datatypes
           "h5zpublic.rkt"  ;; Data filters
