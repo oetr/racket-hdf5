@@ -685,9 +685,10 @@
         -> H5D_layout_t))
 
 (define-hdf5 H5Pset_chunk
-  (_fun (plist_id : hid_t)
-        (ndims : _int) ;; TODO
-        (dim : _pointer) ;; TODO: const hsize_t dim[/*ndims*/]
+  (_fun (plist_id dim) ::
+        (plist_id : hid_t)
+        (ndims : _int = (sequence-length dim))
+        (dim : (_list i hsize_t) = (seq->list dim))
         -> herr_t))
 
 (define-hdf5 H5Pget_chunk

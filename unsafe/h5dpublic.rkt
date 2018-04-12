@@ -215,8 +215,9 @@
         -> herr_t))
 
 (define-hdf5 H5Dset_extent
-  (_fun (dset_id : hid_t)
-        (size : (_ptr i hsize_t))
+  (_fun (dset_id size-in) ::
+        (dset_id : hid_t)
+        (size : (_list i hsize_t) = (seq->list size-in))
         -> herr_t))
 
 (define-hdf5 H5Dscatter

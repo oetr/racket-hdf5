@@ -93,12 +93,10 @@
         -> hid_t))
 
 (define-hdf5 H5Screate_simple
-  (_fun (rank dims-in (maxdims #f)) ::
+  (_fun (rank dims-in (maxdims-in '())) ::
         (rank : _int)
-        (dims : (_list i hsize_t) = (if (list? dims-in)
-                                        dims-in
-                                        (for/list ([n dims-in]) n)))
-        (maxdims : _pointer)
+        (dims : (_list i hsize_t) = (seq->list dims-in))
+        (maxdims : (_list i hsize_t) = (seq->list maxdims-in))
         -> hid_t))
 
 (define-hdf5 H5Sset_extent_simple
@@ -152,12 +150,13 @@
         -> hssize_t))
 
 (define-hdf5 H5Sselect_hyperslab
-  (_fun (space_id : hid_t)
+  (_fun (space_id op start-in _stride-in count-in _block-in) ::
+        (space_id : hid_t)
         (op : H5S_seloper_t)
-        (start : (_list i hsize_t))
-        (_stride : (_list i hsize_t))
-        (count : (_list i hsize_t))
-        (_block : (_list i hsize_t))
+        (start : (_list i hsize_t) = (seq->list start-in))
+        (_stride : (_list i hsize_t) = (seq->list _stride-in))
+        (count : (_list i hsize_t) = (seq->list count-in))
+        (_block : (_list i hsize_t) = (seq->list _block-in))
         -> herr_t))
 
 

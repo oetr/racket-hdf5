@@ -95,4 +95,8 @@
 
 (define off_t _long)
 
+(define (seq->list seq)
+  (cond [(false? seq) '()]
+        [(list? seq) seq]
+        [else (for/list ([n seq]) n)]))
 
