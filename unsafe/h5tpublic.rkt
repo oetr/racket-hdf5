@@ -585,6 +585,7 @@
 (define-hdf5 H5Tcommitted
   (_fun (type_id : hid_t)
         -> htri_t))
+
 (define-hdf5 H5Tencode
   (_fun (obj_id : hid_t)
         (buf : _pointer)

@@ -82,9 +82,7 @@
 #|
  * Storage info struct used by H5O_info_t and H5F_info_t
 |#
-(provide _H5_ih_info_t)
-(provide make-H5_ih_info_t)
-(provide _H5_ih_info_t-pointer/null)
+
 (define-cstruct _H5_ih_info_t
   ([oper hsize_t] ;; btree and/or list
    [index hsize_t]))

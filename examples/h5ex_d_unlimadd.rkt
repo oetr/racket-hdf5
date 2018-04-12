@@ -111,7 +111,6 @@
 (set! dims (vector-ref all-dims 1))
 
 
-
 #|
 * Allocate space for integer data.
 |#

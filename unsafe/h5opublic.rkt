@@ -92,17 +92,17 @@
   (ptr-ref (malloc _H5O_info_t mode) _H5O_info_t))
 
 (define-cstruct _H5O_info_t
-  ([fileno _ulong]		;; File number that object is located in */
-   [addr haddr_t]		;; Object address in file	*/
-   [type H5O_type_t] 		;; Basic object type (group, dataset, etc.) */
-   [rc _uint]		;; Reference count of object    */
-   [atime _time]		;; Access time			*/
-   [mtime _time]		;; Modification time		*/
-   [ctime _time]		;; Change time			*/
-   [btime _time]		;; Birth time			*/
-   [num_attrs hsize_t]          ;; # of attributes attached to object */
-   [hdr _H5O_hdr_info_t]            ;; Object header information */
-   ;; Extra metadata storage for obj & attributes */
+  ([fileno _ulong]	;; File number that object is located in
+   [addr haddr_t]	;; Object address in file
+   [type H5O_type_t] 	;; Basic object type (group, dataset, etc.)
+   [rc _uint]		;; Reference count of object
+   [atime _time]	;; Access time
+   [mtime _time]	;; Modification time
+   [ctime _time]	;; Change time
+   [btime _time]	;; Birth time
+   [num_attrs hsize_t]  ;; # of attributes attached to object
+   [hdr _H5O_hdr_info_t];; Object header information
+   ;; Extra metadata storage for obj & attributes
    [meta_size (_list-struct 
                _H5_ih_info_t ;;   obj;             ;; v1/v2 B-tree & local/fractal heap for groups, B-tree for chunked datasets */
                _H5_ih_info_t ;;  attr;            ;; v2 B-tree & heap for attributes */
@@ -118,7 +118,8 @@
         (name : _string)
         (info : _H5O_info_t-pointer)
         (op_data : _pointer)
-        -> herr_t))
+        -> _void
+        -> 0))
 
 (define H5O_mcdt_search_ret_t
   (_enum
@@ -170,7 +171,9 @@
                    oinfo-in
                    (ptr-ref (malloc _H5O_info_t 'atomic-interior) _H5O_info_t)))
         -> (status : herr_t)
-        -> (list status oinfo)))
+        -> (if (< status 0)
+               (error 'H5Oget_info "Unable to get object info.")
+               oinfo)))
 
 ;; broken interface because of default characters
 (define-hdf5 H5Oget_info_by_name
@@ -252,7 +255,10 @@
         (order : H5_iter_order_t)
         (op : H5O_iterate_t)
         (op_data : _pointer)
-        -> herr_t))
+        -> (status : herr_t)
+        -> (if (< status 0)
+               (error 'H5Ovisit "Unable to visit object.\n")
+               (void))))
 
 (define-hdf5 H5Ovisit_by_name
   (_fun (loc_id : hid_t)

@@ -103,8 +103,7 @@
 (define f (H5Fopen filename H5F_ACC_RDONLY H5P_DEFAULT))
 
 ;;(define p (malloc _H5O_info_t 'atomic))
-(define info (H5Oget_info f))
-(define infobuf (cadr info))
+(define infobuf (H5Oget_info f))
 
 (define od (make-opdata 0 #f (H5O_info_t-addr infobuf)))
 

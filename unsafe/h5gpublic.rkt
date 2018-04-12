@@ -18,17 +18,19 @@
 (define H5G_storage_type_t
   (_enum '(
     H5G_STORAGE_TYPE_UNKNOWN = -1	;; Unknown link storage type	
-    H5G_STORAGE_TYPE_SYMBOL_TABLE      ;; Links in group are stored with a "symbol table"
-                                        ;; (this is sometimes called "old-style" groups) 
-    H5G_STORAGE_TYPE_COMPACT		;; Links are stored in object header 
-    H5G_STORAGE_TYPE_DENSE 		;; Links are stored in fractal heap & indexed with v2 B-tree 
+    H5G_STORAGE_TYPE_SYMBOL_TABLE
+    ;; Links in group are stored with a "symbol table"
+    ;; (this is sometimes called "old-style" groups) 
+    H5G_STORAGE_TYPE_COMPACT ;; Links are stored in object header 
+    H5G_STORAGE_TYPE_DENSE
+    ;; Links are stored in fractal heap & indexed with v2 B-tree 
 )))
 
 ;; Information struct for group (for H5Gget_info/H5Gget_info_by_name/H5Gget_info_by_idx)
 (define-cstruct _H5G_info_t 
-  ([storage_type H5G_storage_type_t]	;; Type of storage for links in group
-   [nlinks hsize_t] ;; Number of links in group
-   [max_corder _int64]             ;; Current max. creation order value for group
+  ([storage_type H5G_storage_type_t] ;; Type of storage for links in group
+   [nlinks hsize_t]    ;; Number of links in group
+   [max_corder _int64] ;; Current max. creation order value for group
    [mounted hbool_t])) ;; Whether group has a file mounted on it
 
 #|******************|#
@@ -64,9 +66,13 @@
         -> hid_t))
 
 (define-hdf5 H5Gget_info
-  (_fun (loc_id : hid_t)
-        (ginfo : _H5G_info_t)
-        -> herr_t))
+  (_fun (loc_id) ::
+        (loc_id : hid_t)
+        (ginfo : (_ptr o _H5G_info_t))
+        -> (status : herr_t)
+        -> (if (< status 0)
+               (error 'H5Gget_info "Unable to get info.")
+               ginfo)))
 
 (define-hdf5 H5Gget_info_by_name
   (_fun (loc_id : hid_t)
@@ -226,9 +232,13 @@
         -> herr_t))
 
 (define-hdf5 H5Gget_num_objs
-  (_fun (loc_id : hid_t)
-        (num_objs : _pointer) ;; TODO *hsize_t
-        -> herr_t))
+  (_fun (loc_id) ::
+        (loc_id : hid_t)
+        (num_objs : (_ptr o hsize_t)) ;; TODO *hsize_t
+        -> (status : herr_t)
+        -> (if (< status 0)
+               (error 'H5Gget_num_objs "Unable to enumerate objects.")
+               num_objs)))
 
 (define-hdf5 H5Gget_objinfo
   (_fun (loc_id name follow_link statbuf) ::
