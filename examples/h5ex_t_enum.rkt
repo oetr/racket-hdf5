@@ -9,9 +9,15 @@ This file is intended for use with HDF5 Library version 1.8
 ***********************************************************|#
 #lang racket
 
-(require ffi/unsafe
+
+(require (rename-in ffi/unsafe
+                    (in-array ffi-in-array)
+                    (array? ffi-array?)
+                    (array-set! ffi-array-set!)
+                    (array-ref ffi-array-ref))
          ffi/unsafe/define
-         rackunit)
+         rackunit
+         math/array)
 
 (require "../unsafe/hdf5.rkt")
 
@@ -40,7 +46,7 @@ This file is intended for use with HDF5 Library version 1.8
 * Initialize data.
 |#
 (define wdata
-  (for*/list ([i DIM0]
+  (for*/vector ([i DIM0]
               [j DIM1])
     (cast (modulo (- (* (+ i 1) j) j) (cast 'PLASMA phase_t _uint))
           _uint phase_t)))
@@ -86,7 +92,7 @@ This file is intended for use with HDF5 Library version 1.8
                          H5P_DEFAULT))
 
 (set! status (H5Dwrite dset memtype H5S_ALL H5S_ALL H5P_DEFAULT
-                       (list->cblock wdata phase_t)))
+                       (vector->cblock wdata phase_t)))
 
 #|
 * Close and release resources.
@@ -103,7 +109,6 @@ This file is intended for use with HDF5 Library version 1.8
 * Therefore we must allocate a new array to read in data using
 * malloc().  For simplicity, we do not rebuild memtype.
 |#
-
 
 #|
 * Open file and dataset.
@@ -127,6 +132,19 @@ This file is intended for use with HDF5 Library version 1.8
 
 (define recovered-data (cblock->vector rdata-data phase_t (apply * ndims)))
 
+(module+ test
+  (check-equal? wdata recovered-data))
+
+(define data-array (vector->array (list->vector ndims) recovered-data))
+
+(pretty-print data-array)
+(for ([i (list-ref dims 0)])
+  (printf " [")
+  (for ([j (list-ref dims 1)])
+    (printf "~a "(array-ref data-array (vector i j))))
+  (printf "]\n"))
+
+;; extract strings using pointers
 (for ([i (list-ref dims 0)])
   (printf " [")
   (for ([j (list-ref dims 1)])
@@ -138,4 +156,3 @@ This file is intended for use with HDF5 Library version 1.8
 (set! status (H5Sclose space))
 (set! status (H5Tclose memtype))
 (set! status (H5Fclose fid))
-

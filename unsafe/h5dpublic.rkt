@@ -111,6 +111,8 @@
         (dapl_id : hid_t)
         -> hid_t))
 
+(define H5Dcreate H5Dcreate2)
+
 (define-hdf5 H5Dcreate_anon
   (_fun (file_id : hid_t)
         (type_id : hid_t)
@@ -200,7 +202,7 @@
         (dataset_id : hid_t)
         (type_id : hid_t)
         (space_id : hid_t)
-        (size : _pointer = (malloc hsize_t 1 'atomic))
+        (size : _pointer = (malloc hsize_t 1 'atomic-interior))
         -> (status : herr_t)
         -> (list status (ptr-ref size hsize_t))))
 

@@ -203,9 +203,6 @@
 
 ;; Variable Length Datatype struct in memory
 ;; (This is only used for VL sequences, not VL strings, which are stored in char *'s)
-(provide _hvl_t)
-(provide make-hvl_t)
-(provide _hvl_t-pointer/null)
 (define-cstruct _hvl_t
   ([len _size]    ;; Length of VL data (in base type units)
    [p _pointer])) ;; Pointer to VL data

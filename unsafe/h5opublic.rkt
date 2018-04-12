@@ -88,7 +88,7 @@
 (define _time _ulong)
 
 ;; Information struct for object (for H5Oget_info/H5Oget_info_by_name/H5Oget_info_by_idx) */
-(define (allocate-H5O_info_t (mode 'atomic))
+(define (allocate-H5O_info_t (mode 'atomic-interior))
   (ptr-ref (malloc _H5O_info_t mode) _H5O_info_t))
 
 (define-cstruct _H5O_info_t
@@ -168,7 +168,7 @@
         (oinfo : _H5O_info_t-pointer/null =
                (if oinfo-in
                    oinfo-in
-                   (ptr-ref (malloc _H5O_info_t 'atomic) _H5O_info_t)))
+                   (ptr-ref (malloc _H5O_info_t 'atomic-interior) _H5O_info_t)))
         -> (status : herr_t)
         -> (list status oinfo)))
 
@@ -180,7 +180,7 @@
         (oinfo : _H5O_info_t-pointer/null =
                (if oinfo-in
                    oinfo-in
-                   (ptr-ref (malloc _H5O_info_t 'atomic) _H5O_info_t)))
+                   (ptr-ref (malloc _H5O_info_t 'atomic-interior) _H5O_info_t)))
         (lapl_id : hid_t)
         -> (status : herr_t)
         -> (list status oinfo)))
