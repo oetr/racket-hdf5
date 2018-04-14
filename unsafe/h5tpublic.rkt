@@ -18,32 +18,32 @@
 (define H5T_class_t
   (_enum
    '(
-     H5T_NO_CLASS = -1 ;; error
-     H5T_INTEGER = 0 ;; integer types
-     H5T_FLOAT = 1 ;; floating-point types
-     H5T_TIME = 2 ;; date and time types
-     H5T_STRING = 3 ;; character string types
-     H5T_BITFIELD = 4 ;; bit field types
-     H5T_OPAQUE = 5 ;; opaque types
-     H5T_COMPOUND = 6 ;; compound types
-     H5T_REFERENCE = 7 ;; reference types
-     H5T_ENUM = 8;; enumeration types
-     H5T_VLEN = 9;; Variable-Length types
-     H5T_ARRAY = 10 ;; Array types
-     H5T_NCLASSES ;; this must be last
+     H5T_NO_CLASS  = -1 ;; error
+     H5T_INTEGER   =  0 ;; integer types
+     H5T_FLOAT     =  1 ;; floating-point types
+     H5T_TIME      =  2 ;; date and time types
+     H5T_STRING    =  3 ;; character string types
+     H5T_BITFIELD  =  4 ;; bit field types
+     H5T_OPAQUE    =  5 ;; opaque types
+     H5T_COMPOUND  =  6 ;; compound types
+     H5T_REFERENCE =  7 ;; reference types
+     H5T_ENUM      =  8 ;; enumeration types
+     H5T_VLEN      =  9 ;; Variable-Length types
+     H5T_ARRAY     = 10 ;; Array types
+     H5T_NCLASSES       ;; this must be last
      )))
 
 ;; Byte orders
 (define H5T_order_t
   (_enum
    '(
-     H5T_ORDER_ERROR      = -1  ;; rror                                      
-     H5T_ORDER_LE         = 0   ;; ittle endian                              
-     H5T_ORDER_BE         = 1   ;; it endian                                 
-     H5T_ORDER_VAX        = 2   ;; AX mixed endian                           
-     H5T_ORDER_MIXED      = 3   ;; ompound type with mixed member orders     
-     H5T_ORDER_NONE       = 4    ;; o particular order (strings bits..)     
-     ;; 5T_ORDER_NONE must be last 
+     H5T_ORDER_ERROR = -1 ;; error
+     H5T_ORDER_LE     = 0 ;; little endian
+     H5T_ORDER_BE     = 1 ;; bit endian
+     H5T_ORDER_VAX    = 2 ;; MAX mixed endian
+     H5T_ORDER_MIXED  = 3 ;; compound type with mixed member orders
+     H5T_ORDER_NONE   = 4 ;; no particular order (strings bits..)
+                          ;; 5T_ORDER_NONE must be last
      )))
 
 ;; Types of integer sign schemes 
@@ -628,7 +628,9 @@
         (name : _pointer = (malloc _string size))
         (size : _size)
         -> (status : herr_t)
-        -> (list status (cast name _pointer _string))))
+        -> (if (< status 0) 
+            (error 'H5Tenum_nameof "Unable to get the name of enum value: ~a~n" value)
+            (cast name _pointer _string))))
 
 (define-hdf5 H5Tenum_valueof
   (_fun (type : hid_t)
