@@ -8,8 +8,7 @@
                     (array-ref ffi-array-ref))
          ffi/unsafe/define
          rackunit
-         math/array
-         )
+         math/array)
 
 (require "../unsafe/hdf5.rkt"
          "../hl/hdf5.rkt")
@@ -19,7 +18,6 @@
   (define results '())
   (define (iter-proc obj name info op-data)
     (set! results (cons (list name (H5O_info_t-type info)) results)))
-
   (H5Ovisit fid 'H5_INDEX_NAME 'H5_ITER_NATIVE iter-proc #f)
   (reverse results))
 
@@ -150,7 +148,6 @@ data
 ;; (array-slice-ref data (list (:: 5) ::...))
 ;; (array-slice-ref data (list (:: 0 1) (::)))
 ;; (define status (H5Fclose fid))
-
 
 (hdf5-list-all fid)
 
