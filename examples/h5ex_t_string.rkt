@@ -73,12 +73,6 @@ This file is intended for use with HDF5 Library version 1.8
 (set! status (H5Dwrite dset memtype H5S_ALL H5S_ALL H5P_DEFAULT
                        block))
 
-;; (set! status (H5Dwrite dset memtype H5S_ALL H5S_ALL H5P_DEFAULT
-;;                        (list->cblock (map (lambda (str)
-;;                                             (cast str _string _pointer))
-;;                                           wdata)
-;;                                      _pointer)))
-
 #|
 * Close and release resources.
 |#
@@ -137,17 +131,12 @@ This file is intended for use with HDF5 Library version 1.8
 (set! memtype (H5Tcopy H5T_C_S1))
 (set! status (H5Tset_size memtype sdim))
 
-     #|
-     * Read the data.
-     |#
+#|
+* Read the data.
+|#
 (set! status (H5Dread dset memtype H5S_ALL H5S_ALL H5P_DEFAULT rdata-ptr))
-;;(define rdata (cblock->list rdata-ptr _bytes 4))
-;; several ways to get strings back into array
-;; 1) convert the cblock into list, and then convert into bytes -> strings
-;;(define rdata (cblock->list rdata-ptr _byte (* (apply * dims) sdim)))
-;;(apply bytes rdata)
 
-;; 2) get a string from each pointer
+;; get a string from each pointer
 (define rdata
   (for/list ([offset (apply * dims)])
     (cast (ptr-add rdata-ptr offset _pointer) _pointer _string)))
@@ -155,16 +144,16 @@ This file is intended for use with HDF5 Library version 1.8
 #|
 * Output the data to the screen.
 |#
- (for ([i (length rdata)]
-       [str rdata])
-   (printf "~a[~a]: ~s\n" DATASET i str))
+(for ([i (length rdata)]
+      [str rdata])
+  (printf "~a[~a]: ~s\n" DATASET i str))
 
 #|
 * Close and release resources.
 |#
 
- (set! status (H5Dclose dset))
- (set! status (H5Sclose space))
- (set! status (H5Tclose filetype))
- (set! status (H5Tclose memtype))
- (set! status (H5Fclose fid))
+(set! status (H5Dclose dset))
+(set! status (H5Sclose space))
+(set! status (H5Tclose filetype))
+(set! status (H5Tclose memtype))
+(set! status (H5Fclose fid))
