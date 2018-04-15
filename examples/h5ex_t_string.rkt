@@ -73,6 +73,12 @@ This file is intended for use with HDF5 Library version 1.8
 (set! status (H5Dwrite dset memtype H5S_ALL H5S_ALL H5P_DEFAULT
                        block))
 
+;; (set! status (H5Dwrite dset memtype H5S_ALL H5S_ALL H5P_DEFAULT
+;;                        (list->cblock (map (lambda (str)
+;;                                             (cast str _string _pointer))
+;;                                           wdata)
+;;                                      _pointer)))
+
 #|
 * Close and release resources.
 |#
@@ -83,77 +89,82 @@ This file is intended for use with HDF5 Library version 1.8
 (set! status (H5Fclose fid))
 
 
-;; #|
-;; * Now we begin the read section of this example.  Here we assume
-;; * the dataset and string have the same name and rank, but can have
-;; * any size.  Therefore we must allocate a new array to read in
-;; * data using malloc().
-;; |#
+#|
+* Now we begin the read section of this example.  Here we assume
+* the dataset and string have the same name and rank, but can have
+* any size.  Therefore we must allocate a new array to read in
+* data using malloc().
+|#
 
-;; #|
-;; * Open file and dataset.
-;; |#
-;; file = H5Fopen (FILE, H5F_ACC_RDONLY, H5P_DEFAULT);
-;; dset = H5Dopen (file, DATASET, H5P_DEFAULT);
+#|
+* Open file and dataset.
+|#
+(set! fid (H5Fopen FILE H5F_ACC_RDONLY H5P_DEFAULT))
+(set! dset (H5Dopen fid DATASET H5P_DEFAULT))
 
-;; #|
-;; * Get the datatype and its size.
-;; |#
-;; filetype = H5Dget_type (dset);
-;; sdim = H5Tget_size (filetype);
-;; sdim++;                         #| Make room for null terminator |#
+#|
+* Get the datatype and its size.
+|#
+(set! filetype (H5Dget_type dset))
+(define sdim (+ 1 (H5Tget_size filetype))) #| Make room for null terminator |#
 
-;; #|
-;; * Get dataspace and allocate memory for read buffer.  This is a
-;; * two dimensional dataset so the dynamic allocation must be done
-;; * in steps.
-;; |#
-;; space = H5Dget_space (dset);
-;; ndims = H5Sget_simple_extent_dims (space, dims, NULL);
 
-;; #|
-;; * Allocate array of pointers to rows.
-;; |#
-;; rdata = (char **) malloc (dims[0] * sizeof (char *));
+#|
+* Get dataspace and allocate memory for read buffer.  This is a
+* two dimensional dataset so the dynamic allocation must be done
+* in steps.
+|#
+(set! space (H5Dget_space dset))
+(define ndims (H5Sget_simple_extent_ndims space))
+(define all-dims (H5Sget_simple_extent_dims space))
 
-;; #|
-;; * Allocate space for integer data.
-;; |#
-;; rdata[0] = (char *) malloc (dims[0] * sdim * sizeof (char));
+#|
+* Allocate array of pointers to rows.
+|#
 
-;; #|
-;; * Set the rest of the pointers to rows to the correct addresses.
-;; |#
-;; for (i=1; i<dims[0]; i++)
-;;      rdata[i] = rdata[0] + i * sdim;
+#|
+* Allocate space for integer data.
+|#
+(define rdata-ptr (malloc (* (apply * dims) sdim (ctype-sizeof _ubyte))))
 
-;;      #|
-;;      * Create the memory datatype.
-;;      |#
-;;      memtype = H5Tcopy (H5T_C_S1);
-;;      status = H5Tset_size (memtype, sdim);
+#|
+* Set the rest of the pointers to rows to the correct addresses.
+|#
 
-;;      #|
-;;      * Read the data.
-;;      |#
-;;      status = H5Dread (dset, memtype, H5S_ALL, H5S_ALL, H5P_DEFAULT, rdata[0]);
+#|
+* Create the memory datatype.
+|#
+(set! memtype (H5Tcopy H5T_C_S1))
+(set! status (H5Tset_size memtype sdim))
 
-;;      #|
-;;      * Output the data to the screen.
-;;      |#
-;;      for (i=0; i<dims[0]; i++)
-;;           printf ("%s[%d]: %s\n", DATASET, i, rdata[i]);
+     #|
+     * Read the data.
+     |#
+(set! status (H5Dread dset memtype H5S_ALL H5S_ALL H5P_DEFAULT rdata-ptr))
+;;(define rdata (cblock->list rdata-ptr _bytes 4))
+;; several ways to get strings back into array
+;; 1) convert the cblock into list, and then convert into bytes -> strings
+;;(define rdata (cblock->list rdata-ptr _byte (* (apply * dims) sdim)))
+;;(apply bytes rdata)
 
-;;           #|
-;;           * Close and release resources.
-;;           |#
-;;           free (rdata[0]);
-;;           free (rdata);
-;;           status = H5Dclose (dset);
-;;           status = H5Sclose (space);
-;;           status = H5Tclose (filetype);
-;;           status = H5Tclose (memtype);
-;;           status = H5Fclose (file);
+;; 2) get a string from each pointer
+(define rdata
+  (for/list ([offset (apply * dims)])
+    (cast (ptr-add rdata-ptr offset _pointer) _pointer _string)))
 
-;;           return 0;
-;;           }
+#|
+* Output the data to the screen.
+|#
+ (for ([i (length rdata)]
+       [str rdata])
+   (printf "~a[~a]: ~s\n" DATASET i str))
+
+#|
+* Close and release resources.
+|#
+
+ (set! status (H5Dclose dset))
+ (set! status (H5Sclose space))
+ (set! status (H5Tclose filetype))
+ (set! status (H5Tclose memtype))
+ (set! status (H5Fclose fid))
