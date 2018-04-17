@@ -82,7 +82,10 @@
                       (H5Tget_native_type (H5Tget_member_type type i)
                                           'H5T_DIR_DEFAULT)))
          ]
-        [else 'nothing])
+        [(eq? class 'H5T_OPAQUE)
+         'do-nothing
+         ]
+        [else 'do-nothing])
   (define rdata-ptr (malloc (* (apply * dims) type-size)))
   ;;(memset rdata-ptr #xff (* (apply * dims) type-size))
   ;;(* (apply * dims) type-size)
@@ -199,6 +202,12 @@
                  (values name val))))
 
          (set! data (struct-type->list rdata-ptr type-list name-list offset-list (apply * dims)))
+         ]
+        [(symbol=? class 'H5T_OPAQUE)
+         (printf "OPAQUE ----------------------------------------~n ")
+         (set! data (vector->array
+                     (cblock->vector rdata-ptr _ubyte
+                                     (* (apply * dims) type-size))))
          ]
         [else
          (error 'dataset-get-data "Unsupported class ~a~n" class)])
