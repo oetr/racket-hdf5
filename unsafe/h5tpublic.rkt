@@ -540,7 +540,9 @@
 
 (define-hdf5 H5Tclose
   (_fun (type_id : hid_t)
-        -> herr_t))
+        -> (status : herr_t)
+        -> (when (< status 0)
+             (error 'H5Tclose "Failed to close type."))))
 
 (define-hdf5 H5Tequal
   (_fun (type1_id : hid_t)
@@ -604,7 +606,9 @@
         (name : _string)
         (offset : _size)
         (member_id : hid_t)
-        -> herr_t))
+        -> (status : herr_t)
+        -> (when (< status 0)
+             (error 'H5Tinsert "Unable to insert ~a~n" name))))
 
 (define-hdf5 H5Tpack
   (_fun (type_id : hid_t)
@@ -742,7 +746,7 @@
 (define-hdf5 H5Tget_member_name
   (_fun (type_id : hid_t)
         (membno : _uint)
-        -> (name : _bytes)
+        -> (name : _string)
         -> (~a name))) ;; TODO char->string?
 
 (define-hdf5 H5Tget_member_index
@@ -763,7 +767,10 @@
 (define-hdf5 H5Tget_member_type
   (_fun (type_id : hid_t)
         (membno : _uint)
-        -> hid_t))
+        -> (type : hid_t)
+        -> (if (< type 0)
+               (error 'H5Tget_member_type "Unable to get member type: ~a~n" membno)
+               type)))
 
 (define-hdf5 H5Tget_member_value
   (_fun (type_id : hid_t)

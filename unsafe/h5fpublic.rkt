@@ -161,7 +161,9 @@
 
 (define-hdf5 H5Fclose
   (_fun (file_id : hid_t)
-        -> herr_t))
+        -> (status : herr_t)
+        -> (when (< status 0)
+             (error 'H5Fclose "Failed to close dataset."))))
 
 (define-hdf5 H5Fget_create_plist
   (_fun (file_id : hid_t)

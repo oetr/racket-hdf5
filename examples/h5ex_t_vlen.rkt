@@ -28,7 +28,7 @@ This file is intended for use with HDF5 Library version 1.8
 (define FILE            "./data/h5ex_t_vlen.h5")
 (define DATASET         "DS1")
 (define LEN0            3)
-(define LEN1            50)
+(define LEN1            10)
 
 (define dims (list 2))
 

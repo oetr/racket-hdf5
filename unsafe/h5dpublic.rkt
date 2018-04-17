@@ -131,7 +131,9 @@
 
 (define-hdf5 H5Dclose
   (_fun (dset_id : hid_t)
-        -> herr_t))
+        -> (status : herr_t)
+        -> (when (< status 0)
+             (error 'H5Dclose "Failed to close dataset."))))
 
 (define-hdf5 H5Dget_space
   (_fun (dset_id : hid_t)
@@ -169,7 +171,9 @@
         (file_space_id : hid_t)
         (plist_id : hid_t)
         (buf : _pointer) ;; TODO: out
-        -> (status : herr_t)))
+        -> (status : herr_t)
+        -> (when (< status 0)
+             (error 'H5Dread "Failed to read data."))))
 
 (define-hdf5 H5Dwrite
   (_fun (dset_id mem_type_id mem_space_id file_space_id plist_id buf) ::
@@ -179,7 +183,9 @@
         (file_space_id : hid_t)
         (plist_id : hid_t)
         (buf : _pointer)
-        -> herr_t))
+        -> (status : herr_t)
+        -> (when (< status 0)
+             (error 'H5Dwrite "Failed to write dataset."))))
 
 
 (define-hdf5 H5Diterate
@@ -195,7 +201,9 @@
         (space_id : hid_t)
         (plist_id : hid_t)
         (buf : _pointer)
-        -> herr_t))
+        -> (status : herr_t)
+        -> (when (< status 0)
+             (error 'H5Dclose "Failed to reclaim vlen."))))
 
 (define-hdf5 H5Dvlen_get_buf_size
   (_fun (dataset_id type_id space_id) ::

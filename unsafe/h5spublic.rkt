@@ -112,7 +112,9 @@
 
 (define-hdf5 H5Sclose
   (_fun (space_id : hid_t)
-        -> herr_t))
+        -> (status : herr_t)
+        -> (when (< status 0)
+             (error 'H5Sclose "Failed to close space."))))
 
 (define-hdf5 H5Sencode
   (_fun (obj_id : hid_t)
