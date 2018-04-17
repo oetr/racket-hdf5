@@ -50,7 +50,8 @@
 * optional part of the hdf5 library.
 |#
 
-(define FILTER H5Z_FILTER_DEFLATE)
+;;(define FILTER H5Z_FILTER_DEFLATE)
+(define FILTER H5Z_FILTER_SZIP)
 
 (define avail (H5Zfilter_avail FILTER))
 (unless avail
@@ -91,7 +92,8 @@
 * compression filter and set the chunk size.
 |#
 (define dcpl (H5Pcreate H5P_DATASET_CREATE))
-(define status (H5Pset_deflate dcpl 9))
+(define status (H5Pset_szip dcpl H5_SZIP_NN_OPTION_MASK 8))
+;;(define status (H5Pset_deflate dcpl 9))
 (set! status (H5Pset_chunk dcpl chunk))
 
 #|

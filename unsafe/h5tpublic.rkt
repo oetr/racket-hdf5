@@ -667,11 +667,14 @@
 (define-hdf5 H5Tset_tag
   (_fun (type : hid_t)
         (tag : _string)
-        -> herr_t))
+        -> (status : herr_t)
+        -> (when (< status 0)
+             (error 'H5Tset_tag "Unable to set tag ~a\n" tag))))
 
 (define-hdf5 H5Tget_tag
   (_fun (type : hid_t)
-        -> _pointer)) ;; TODO *char->string?
+        -> (str : _pointer)
+        -> (cast str _pointer _string))) ;; TODO *char->string?
 
 ;; Querying property values
 (define-hdf5 H5Tget_super
