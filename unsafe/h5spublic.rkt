@@ -93,8 +93,8 @@
         -> hid_t))
 
 (define-hdf5 H5Screate_simple
-  (_fun (rank dims-in (maxdims-in '())) ::
-        (rank : _int)
+  (_fun (dims-in (maxdims-in '())) ::
+        (rank : _int = (sequence-length dims-in))
         (dims : (_list i hsize_t) = (seq->list dims-in))
         (maxdims : (_list i hsize_t) = (seq->list maxdims-in))
         -> hid_t))
@@ -140,8 +140,8 @@
         (space_id : hid_t)
         (dims : (_list o hsize_t (H5Sget_simple_extent_ndims space_id)))
         (maxdims : (_list o hsize_t (H5Sget_simple_extent_ndims space_id)))
-        -> (status : _int)
-        -> (vector status dims maxdims)))
+        -> (ndims : _int)
+        -> (vector ndims dims maxdims)))
 
 (define-hdf5 H5Sis_simple
   (_fun (space_id : hid_t)

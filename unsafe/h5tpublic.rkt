@@ -649,19 +649,28 @@
 
 ;; Operations defined on array datatypes
 (define-hdf5 H5Tarray_create2
-  (_fun (base_id : hid_t)
-        (ndims : _uint)
-        (dim : hsize_t) ;; TODO: [ndims]
+  (_fun (base_id dims-in) ::
+        (base_id : hid_t)
+        (ndims : _uint = (sequence-length dims-in))
+        (dims : (_list i hsize_t) = (seq->list dims-in)) ;; TODO: [ndims]
         -> hid_t))
+
+(define H5Tarray_create H5Tarray_create2)
 
 (define-hdf5 H5Tget_array_ndims
   (_fun (type_id : hid_t)
         -> _int))
 
 (define-hdf5 H5Tget_array_dims2
-  (_fun (type_id : hid_t)
-        (dims : _pointer)
-        -> _int))
+  (_fun (type_id) ::
+        (type_id : hid_t)
+        (dims : _pointer = (malloc hsize_t 64 'atomic))
+        -> (n : _int)
+        -> (if (< n 0)
+               (error 'H5Tget_array_dims2 "Unable to get array dims.")
+               (cblock->list dims hsize_t n))))
+
+(define H5Tget_array_dims H5Tget_array_dims2)
 
 ;; Operations defined on opaque datatypes
 (define-hdf5 H5Tset_tag

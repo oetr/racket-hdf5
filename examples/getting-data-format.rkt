@@ -82,6 +82,9 @@
                       (H5Tget_native_type (H5Tget_member_type type i)
                                           'H5T_DIR_DEFAULT)))
          ]
+        [(eq? class 'H5T_ARRAY)
+         (printf "ALL-size: ~a~n" (* (apply * dims) type-size))
+         ]
         [(eq? class 'H5T_OPAQUE)
          'do-nothing
          ]
@@ -208,6 +211,25 @@
          (set! data (vector->array
                      (cblock->vector rdata-ptr _ubyte
                                      (* (apply * dims) type-size))))
+         ]
+        [(symbol=? class 'H5T_ARRAY)
+         (printf "ARRAY ----------------------------------------~n ")
+         (printf "TYPE: ~a~n" (H5Tget_native_type type 'H5T_DIR_DEFAULT))
+         (printf "TYPE SIZE: ~a~n" type-size)
+         (printf "TYPE: ~a~n" (H5Tget_class (H5Tget_native_type type 'H5T_DIR_DEFAULT)))
+         (define super-class (H5Tget_class (H5Tget_super type)))
+         
+         (printf "SUPER-CLASS: ~a~n" super-class)
+         (printf "C-TYPE: ~a~n" (hdf5-type->ctype (H5Tget_super type)))
+         (define ctype (hdf5-type->ctype (H5Tget_super type)))
+         ;; get array shape
+
+         (define array-dims (H5Tget_array_dims type))
+         (set! data (vector->array
+                     (list->vector (append dims array-dims))
+                     (cblock->vector rdata-ptr ctype
+                                     (* (apply * (append dims array-dims))))))
+
          ]
         [else
          (error 'dataset-get-data "Unsupported class ~a~n" class)])
