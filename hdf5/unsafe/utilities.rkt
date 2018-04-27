@@ -18,3 +18,18 @@
 (define (cblock->array cblock (type #f))
   (define data (cblock->vector data type))
   (vector->array data))
+
+;; recursively convert structure into lists
+;; (define (struct*->cblock a-struct)
+;;   (define ())
+;;   (define (loop ))
+;;   )
+
+;; (define (struct->cblock a-struct ctypes)
+;;   ;; make sure the number of types equals the number of struct elements
+;;   (define struct-list (struct->list a-struct))
+;;   (list->cblock(malloc (apply + (map ctype-sizeof ctypes)) 'atomic)
+  
+  
+;;   )
+

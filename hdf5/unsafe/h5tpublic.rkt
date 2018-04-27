@@ -608,7 +608,7 @@
         (member_id : hid_t)
         -> (status : herr_t)
         -> (when (< status 0)
-             (error 'H5Tinsert "Unable to insert ~a~n" name))))
+             (error 'H5Tinsert "Unable to insert ~s~n" name))))
 
 (define-hdf5 H5Tpack
   (_fun (type_id : hid_t)
@@ -622,8 +622,10 @@
 (define-hdf5 H5Tenum_insert
   (_fun (type : hid_t)
         (name : _string)
-        (value : _pointer)
-        -> herr_t))
+        (value : _pointer) ;; TODO: no pointers?
+        -> (status : herr_t)
+        -> (when (< status 0)
+             (error 'H5Tenum_insert "Unable to insert enum: ~a~n"))))
 
 (define-hdf5 H5Tenum_nameof
   (_fun (type value size) ::
@@ -808,7 +810,9 @@
 (define-hdf5 H5Tset_size
   (_fun (type_id : hid_t)
         (size : _size)
-        -> herr_t))
+        -> (status : herr_t)
+        -> (when (< status 0)
+             (error 'H5Tset_size "Unable to set size."))))
 
 (define-hdf5 H5Tset_order
   (_fun (type_id : hid_t)

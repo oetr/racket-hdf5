@@ -179,8 +179,10 @@
   (_fun (space_id : hid_t)
         (op : H5S_seloper_t)
         (num_elem : _size)
-        (coord : (_ptr i hsize_t))
-        -> herr_t))
+        (coord : _pointer)
+        -> (status : herr_t)
+        -> (when (< status 0)
+             (error 'H5Sselect_elements "Unable to select elements."))))
 
 (define-hdf5 H5Sget_simple_extent_type
   (_fun (space_id : hid_t)

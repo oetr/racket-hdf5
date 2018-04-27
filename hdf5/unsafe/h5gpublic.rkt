@@ -49,6 +49,8 @@
         (gapl_id : hid_t)
         -> hid_t))
 
+(define H5Gcreate H5Gcreate2)
+
 (define-hdf5 H5Gcreate_anon
   (_fun (loc_id : hid_t)
         (gcpl_id : hid_t)
@@ -93,7 +95,9 @@
 
 (define-hdf5 H5Gclose
   (_fun (group_id : hid_t)
-        -> herr_t))
+        -> (status : herr_t)
+        -> (when (< status 0)
+             (error 'H5Gclose "Unable to close the group."))))
 
 #| Symbols defined for compatibility with previous versions of the HDF5 API.
  *
