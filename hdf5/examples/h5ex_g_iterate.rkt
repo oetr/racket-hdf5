@@ -5,7 +5,7 @@
          ffi/winapi
          rackunit)
 
-(require "../unsafe/main.rkt")
+(require "../unsafe/hdf5.rkt")
 
 
 #|

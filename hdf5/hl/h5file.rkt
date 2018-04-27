@@ -1,7 +1,7 @@
 #lang racket
 
 (require racket)
-(require "../unsafe/main.rkt")
+(require "../unsafe/hdf5.rkt")
 
 (provide (all-defined-out))
 

@@ -14,7 +14,7 @@ This file is intended for use with HDF5 Library version 1.8
          ffi/winapi
          rackunit)
 
-(require "../unsafe/main.rkt")
+(require "../unsafe/hdf5.rkt")
 
 (define FILE    "./data/h5ex_t_int.h5")
 (define DATASET "DS1")

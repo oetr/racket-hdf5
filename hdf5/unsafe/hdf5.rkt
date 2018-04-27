@@ -1,4 +1,4 @@
-#lang racket
+#lang racket/base
 ;; Racket Foreign interface
 
 (require "utilities.rkt"
