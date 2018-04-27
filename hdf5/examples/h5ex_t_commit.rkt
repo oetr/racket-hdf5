@@ -24,7 +24,7 @@ This file is intended for use with HDF5 Library version 1.8
          math/array
          )
 
-(require "../unsafe/hdf5.rkt")
+(require "../unsafe/main.rkt")
 
 
 (define FILE            "./data/h5ex_t_commit.h5")

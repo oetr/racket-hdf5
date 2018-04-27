@@ -10,7 +10,7 @@
          rackunit
          math/array)
 
-(require "../unsafe/hdf5.rkt")
+(require "../unsafe/main.rkt")
 
 
 

@@ -10,8 +10,8 @@
          rackunit
          math/array)
 
-(require "../unsafe/hdf5.rkt"
-         "../hl/hdf5.rkt")
+(require "../unsafe/main.rkt"
+         "../hl/main.rkt")
 
 ;; get the names of all
 (define (h5file->name-type fid)

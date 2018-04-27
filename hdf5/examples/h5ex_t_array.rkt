@@ -22,7 +22,7 @@
          math/array
          )
 
-(require "../unsafe/hdf5.rkt")
+(require "../unsafe/main.rkt")
 
 (define FILE            "./data/h5ex_t_array.h5")
 (define DATASET         "DS1")

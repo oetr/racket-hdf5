@@ -5,7 +5,7 @@
          ffi/winapi
          rackunit)
 
-(require "../unsafe/hdf5.rkt")
+(require "../unsafe/main.rkt")
 
 #|
 * Define operator data structure type for H5Literate callback.

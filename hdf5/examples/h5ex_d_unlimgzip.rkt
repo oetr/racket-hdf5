@@ -26,7 +26,7 @@
          math/array
          )
 
-(require "../unsafe/hdf5.rkt")
+(require "../unsafe/main.rkt")
 
 (define FILE            "./data/h5ex_d_unlimgzip.h5")
 (define DATASET         "DS1")
