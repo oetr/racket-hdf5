@@ -2,7 +2,7 @@
 
 (require math/array
          (only-in ffi/unsafe _int)
-         "../unsafe/hdf5.rkt"
+         hdf5/unsafe
          "../hl/h5file.rkt")
 
 

@@ -37,7 +37,7 @@
          math/array
          )
 
-(require "../unsafe/hdf5.rkt")
+(require hdf5/unsafe)
 
 (define FILE            "./data/h5ex_t_cpxcmpd.h5")
 (define DATASET         "DS1")

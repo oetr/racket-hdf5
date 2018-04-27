@@ -19,7 +19,7 @@ This file is intended for use with HDF5 Library version 1.8
          rackunit
          math/array)
 
-(require "../unsafe/hdf5.rkt")
+(require hdf5/unsafe)
 
 (define FILE            "./data/h5ex_t_enum.h5")
 (define DATASET         "DS1")
