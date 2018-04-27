@@ -1,25 +1,25 @@
-* High-level types
-* Add examples with higher abstraction levels
-* Add to github and to planet
-* Automatic type conversion
+* TODO
+** TODO Develop high-level API (based on python, c++)
+** TODO High-level types
+** Add examples with higher abstraction levels
+** Automatic type conversion
 - don't bother with the many types
 - define "standard" types
 - allow usage of raw api too, to force a type?
+** Add documentation
+- It's a waste of time for the raw C interface
+- I will add documentation after the high-level API is developed
 
-* Provide raw C-API
-- more or less done?
-- need to double check
-
-* Develop high-level API (based on python, c++)
-
-* Add a racketify macro (convert "_" into "-")
-- no need
-
-* Add and test modules one by one
+* FINISHED
+** DONE Add to github and to planet
+** DONE Provide raw C-API
+* DEFERRED
+** DONE Add a racketify macro (convert "_" into "-")
+- I like the underscores, because the examples in C can be converted into unsafe Racket almost 1:1
+** DONE Add and test modules one by one
 - too much work, test the essentials
+- better, convert some examples from C
 
-* TODO Pre-make result buffers for each function that needs those
+** DONE Pre-make result buffers for each function that needs those
 - is not always possible
 - breaks the official API
-* FINISHED
-* DEFERRED

@@ -1,4 +1,7 @@
-FFI bindings to the hdf5 library.
-- link hdf5 library
-- installation instructions
-- quickstart guide
+This are the FFI bindings for the [[https://portal.hdfgroup.org][hdf5]] library written in Racket.
+
+* Installation instructions
+=raco pkg install hdf5=
+
+* Quickstart guide
+Check the =examples= folder.

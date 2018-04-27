@@ -11,9 +11,8 @@
 !hdf5/unsafe
 !hdf5/hl/
 
-!hdf5/examples/
-!hdf5/examples/data/
-
+!examples/
+!examples/data/
 
 # source code
 !*.rkt
