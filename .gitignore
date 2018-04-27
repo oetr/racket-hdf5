@@ -7,8 +7,10 @@
 !*.org
 
 # files
-!examples/
-!examples/data/
+!hdf5/
+!hdf5/examples/
+!hdf5/examples/data/
+!hdf5/hl/
 
 # source code
 !*.rkt
