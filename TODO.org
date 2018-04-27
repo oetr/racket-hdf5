@@ -1,9 +1,6 @@
 * High-level types
+* Add examples with higher abstraction levels
 * Add to github and to planet
-** Add more examples
-** Add examples with higher abstraction levels
-** Update readme
-
 * Automatic type conversion
 - don't bother with the many types
 - define "standard" types
@@ -24,3 +21,5 @@
 * TODO Pre-make result buffers for each function that needs those
 - is not always possible
 - breaks the official API
+* FINISHED
+* DEFERRED
