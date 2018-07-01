@@ -3,7 +3,7 @@
 (require math/array
          (only-in ffi/unsafe _int)
          hdf5/unsafe
-         "../hl/h5file.rkt")
+         "../hdf5/hl/h5file.rkt")
 
 
 (define a0 (build-array (vector 1000)
