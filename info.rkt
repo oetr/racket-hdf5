@@ -2,4 +2,4 @@
 
 (define name "hdf5")
 (define collection 'multi)
-(define deps '("base"))
+(define deps '("base" "rackunit" "math/array"))
